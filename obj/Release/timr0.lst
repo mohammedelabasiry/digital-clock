@@ -1,0 +1,777 @@
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  1
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00001 ;--------------------------------------------------------
+                      00002 ; File Created by SDCC : free open source ANSI-C Compiler
+                      00003 ; Version 4.0.0 #11528 (MINGW64)
+                      00004 ;--------------------------------------------------------
+                      00005 ; PIC port for the 14-bit core
+                      00006 ;--------------------------------------------------------
+                      00007 ;       .file   "timr0.c"
+                      00008         list    p=16f877a
+                      00009         radix dec
+                      00010         include "p16f877a.inc"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Oct 21 2015
+                      00005 ;  MPASM PIC16F877A processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2015 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00567         LIST
+                      00011 ;--------------------------------------------------------
+                      00012 ; external declarations
+                      00013 ;--------------------------------------------------------
+  0000                00014         extern  _get_mode
+  0000                00015         extern  _DIG_CLK_update
+  0000                00016         extern  _hour_update
+  0000                00017         extern  _minutes_update
+  0000                00018         extern  _SSD_Update_2
+  0000                00019         extern  _SSD_Update
+  0000                00020         extern  _PB_Update
+  0000                00021         extern  _TMR0
+  0000                00022         extern  _OPTION_REGbits
+  0000                00023         extern  _INTCONbits
+                      00024 
+  0000                00025         extern PSAVE
+  0000                00026         extern SSAVE
+  0000                00027         extern WSAVE
+  0000                00028         extern STK12
+  0000                00029         extern STK11
+  0000                00030         extern STK10
+  0000                00031         extern STK09
+  0000                00032         extern STK08
+  0000                00033         extern STK07
+  0000                00034         extern STK06
+  0000                00035         extern STK05
+  0000                00036         extern STK04
+  0000                00037         extern STK03
+  0000                00038         extern STK02
+  0000                00039         extern STK01
+  0000                00040         extern STK00
+                      00041 ;--------------------------------------------------------
+                      00042 ; global declarations
+                      00043 ;--------------------------------------------------------
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  2
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+  0000                00044         global  _TMR0_Init
+  0000                00045         global  _TMR0_Start
+  0000                00046         global  _TMR0_Update
+                      00047 
+                      00048 ;--------------------------------------------------------
+                      00049 ; global definitions
+                      00050 ;--------------------------------------------------------
+                      00051 ;--------------------------------------------------------
+                      00052 ; absolute symbol definitions
+                      00053 ;--------------------------------------------------------
+                      00054 ;--------------------------------------------------------
+                      00055 ; compiler-defined variables
+                      00056 ;--------------------------------------------------------
+                      00057 UDL_timr0_0     udata
+0000                  00058 r0x1002 res     1
+0001                  00059 ___sdcc_saved_fsr       res     1
+                      00060 ;--------------------------------------------------------
+                      00061 ; initialized data
+                      00062 ;--------------------------------------------------------
+                      00063 
+                      00064 IDD_timr0_0     idata
+0000                  00065 _TMR0_Update_counter_65536_34
+0000   00             00066         db      0x00    ; 0
+                      00067 
+                      00068 ;--------------------------------------------------------
+                      00069 ; initialized absolute data
+                      00070 ;--------------------------------------------------------
+                      00071 ;--------------------------------------------------------
+                      00072 ; overlayable items in internal ram 
+                      00073 ;--------------------------------------------------------
+                      00074 ;       udata_ovr
+                      00075 ;--------------------------------------------------------
+                      00076 ; interrupt and initialization code
+                      00077 ;--------------------------------------------------------
+                      00078 c_interrupt     code    0x0004
+0004                  00079 __sdcc_interrupt:
+                      00080 ;***
+                      00081 ;  pBlock Stats: dbName = I
+                      00082 ;***
+                      00083 ;functions called:
+                      00084 ;   _PB_Update
+                      00085 ;   _DIG_CLK_update
+                      00086 ;   _minutes_update
+                      00087 ;   _hour_update
+                      00088 ;   _get_mode
+                      00089 ;   _SSD_Update_2
+                      00090 ;   _SSD_Update
+                      00091 ;   _PB_Update
+                      00092 ;   _DIG_CLK_update
+                      00093 ;   _minutes_update
+                      00094 ;   _hour_update
+                      00095 ;   _get_mode
+                      00096 ;   _SSD_Update_2
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  3
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00097 ;   _SSD_Update
+                      00098 ;1 compiler assigned register :
+                      00099 ;   r0x1002
+                      00100 ;; Starting pCode block
+0004                  00101 _TMR0_Update:
+                      00102 ; 0 exit points
+                      00103 ;       .line   26; "timr0.c"   void TMR0_Update(void) __interrupt 0 // @ 5 ms
+0004   00??           00104         MOVWF   WSAVE
+0005   0E03           00105         SWAPF   STATUS,W
+0006   0183           00106         CLRF    STATUS
+0007   00??           00107         MOVWF   SSAVE
+0008   080A           00108         MOVF    PCLATH,W
+0009   018A           00109         CLRF    PCLATH
+000A   00??           00110         MOVWF   PSAVE
+000B   0804           00111         MOVF    FSR,W
+000C   0??? 0???      00112         BANKSEL ___sdcc_saved_fsr
+000E   00??           00113         MOVWF   ___sdcc_saved_fsr
+                      00114 ;       .line   32; "timr0.c"   counter++;
+000F   0??? 0???      00115         BANKSEL _TMR0_Update_counter_65536_34
+0011   0A??           00116         INCF    _TMR0_Update_counter_65536_34,F
+                      00117 ;       .line   35; "timr0.c"   if (counter == 5)
+0012   08??           00118         MOVF    _TMR0_Update_counter_65536_34,W
+0013   3A05           00119         XORLW   0x05
+0014   1D03           00120         BTFSS   STATUS,2
+0015   2???           00121         GOTO    _00114_DS_
+                      00122 ;       .line   37; "timr0.c"   PB_Update();    // read push buttons --> 0 & 2 ---> then update samples
+0016   0??? 0???      00123         PAGESEL _PB_Update
+0018   2???           00124         CALL    _PB_Update
+0019   0??? 0???      00125         PAGESEL $
+                      00126 ;       .line   38; "timr0.c"   DIG_CLK_update();
+001B   0??? 0???      00127         PAGESEL _DIG_CLK_update
+001D   2???           00128         CALL    _DIG_CLK_update
+001E   0??? 0???      00129         PAGESEL $
+                      00130 ;       .line   39; "timr0.c"   minutes_update();
+0020   0??? 0???      00131         PAGESEL _minutes_update
+0022   2???           00132         CALL    _minutes_update
+0023   0??? 0???      00133         PAGESEL $
+                      00134 ;       .line   40; "timr0.c"   hour_update();
+0025   0??? 0???      00135         PAGESEL _hour_update
+0027   2???           00136         CALL    _hour_update
+0028   0??? 0???      00137         PAGESEL $
+                      00138 ;       .line   41; "timr0.c"   counter = 0;
+002A   0??? 0???      00139         BANKSEL _TMR0_Update_counter_65536_34
+002C   01??           00140         CLRF    _TMR0_Update_counter_65536_34
+002D                  00141 _00114_DS_:
+                      00142 ;       .line   44; "timr0.c"   if(get_mode() == normal)
+002D   0??? 0???      00143         PAGESEL _get_mode
+002F   2???           00144         CALL    _get_mode
+0030   0??? 0???      00145         PAGESEL $
+0032   0??? 0???      00146         BANKSEL r0x1002
+0034   00??           00147         MOVWF   r0x1002
+0035   08??           00148         MOVF    r0x1002,W
+0036   1D03           00149         BTFSS   STATUS,2
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  4
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0037   2???           00150         GOTO    _00116_DS_
+                      00151 ;       .line   46; "timr0.c"   SSD_Update_2();
+0038   0??? 0???      00152         PAGESEL _SSD_Update_2
+003A   2???           00153         CALL    _SSD_Update_2
+003B   0??? 0???      00154         PAGESEL $
+003D   2???           00155         GOTO    _00117_DS_
+003E                  00156 _00116_DS_:
+                      00157 ;       .line   49; "timr0.c"   SSD_Update();   // put the output module task first
+003E   0??? 0???      00158         PAGESEL _SSD_Update
+0040   2???           00159         CALL    _SSD_Update
+0041   0??? 0???      00160         PAGESEL $
+0043                  00161 _00117_DS_:
+                      00162 ;       .line   56; "timr0.c"   TMR0_CLEAR_FLAG();
+0043   0??? 0???      00163         BANKSEL _INTCONbits
+0045   11??           00164         BCF     _INTCONbits,2
+                      00165 ;       .line   57; "timr0.c"   TMR0_SET_TIME_MS(TMR0_TICK_MS);
+0046   30D8           00166         MOVLW   0xd8
+0047   00??           00167         MOVWF   _TMR0
+                      00168 ;       .line   60; "timr0.c"   }
+0048   0??? 0???      00169         BANKSEL ___sdcc_saved_fsr
+004A   08??           00170         MOVF    ___sdcc_saved_fsr,W
+004B   1283 1303      00171         BANKSEL FSR
+004D   0084           00172         MOVWF   FSR
+004E   08??           00173         MOVF    PSAVE,W
+004F   008A           00174         MOVWF   PCLATH
+0050   0183           00175         CLRF    STATUS
+0051   0E??           00176         SWAPF   SSAVE,W
+0052   0083           00177         MOVWF   STATUS
+0053   0E??           00178         SWAPF   WSAVE,F
+0054   0E??           00179         SWAPF   WSAVE,W
+0055                  00180 END_OF_INTERRUPT:
+0055   0009           00181         RETFIE  
+                      00182 
+                      00183 ;--------------------------------------------------------
+                      00184 ; code
+                      00185 ;--------------------------------------------------------
+                      00186 code_timr0      code
+                      00187 ;***
+                      00188 ;  pBlock Stats: dbName = C
+                      00189 ;***
+                      00190 ;has an exit
+                      00191 ;; Starting pCode block
+                      00192 S_timr0__TMR0_Start     code
+0000                  00193 _TMR0_Start:
+                      00194 ; 2 exit points
+                      00195 ;       .line   19; "timr0.c"   TMR0_SET_INT_STATE(1);
+0000   0??? 0???      00196         BANKSEL _INTCONbits
+0002   16??           00197         BSF     _INTCONbits,5
+                      00198 ;       .line   20; "timr0.c"   GIE = 1;
+0003   17??           00199         BSF     _INTCONbits,7
+                      00200 ;       .line   21; "timr0.c"   TMR0_SELECT_CLOCK_SOURCE(0); // Internal oscillator
+0004   0??? 0???      00201         BANKSEL _OPTION_REGbits
+0006   12??           00202         BCF     _OPTION_REGbits,5
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  5
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00203 ;       .line   22; "timr0.c"   TMR0_SET_STATE(0);          // TMR0 is on
+0007   12??           00204         BCF     _OPTION_REGbits,5
+                      00205 ;       .line   23; "timr0.c"   }
+0008   0008           00206         RETURN  
+                      00207 ; exit point of _TMR0_Start
+                      00208 
+                      00209 ;***
+                      00210 ;  pBlock Stats: dbName = C
+                      00211 ;***
+                      00212 ;has an exit
+                      00213 ;; Starting pCode block
+                      00214 S_timr0__TMR0_Init      code
+0000                  00215 _TMR0_Init:
+                      00216 ; 2 exit points
+                      00217 ;       .line   11; "timr0.c"   TMR0_SET_STATE(1);          // TMR0 is off
+0000   0??? 0???      00218         BANKSEL _OPTION_REGbits
+0002   16??           00219         BSF     _OPTION_REGbits,5
+                      00220 ;       .line   12; "timr0.c"   TMR0_SET_PRE_SCALER(7);     // N = 256
+0003   11??           00221         BCF     _OPTION_REGbits,3
+0004   14??           00222         BSF     _OPTION_REGbits,0
+0005   14??           00223         BSF     _OPTION_REGbits,1
+0006   15??           00224         BSF     _OPTION_REGbits,2
+                      00225 ;       .line   14; "timr0.c"   }
+0007   0008           00226         RETURN  
+                      00227 ; exit point of _TMR0_Init
+                      00228 
+                      00229 
+                      00230 ;       code size estimation:
+                      00231 ;          51+   24 =    75 instructions (  198 byte)
+                      00232 
+                      00233         end
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+ACKDT                             CONSTANT      00000005              5
+ACKEN                             CONSTANT      00000004              4
+ACKSTAT                           CONSTANT      00000006              6
+ADCON0                            CONSTANT      0000001F             31
+ADCON1                            CONSTANT      0000009F            159
+ADCS0                             CONSTANT      00000006              6
+ADCS1                             CONSTANT      00000007              7
+ADCS2                             CONSTANT      00000006              6
+ADDEN                             CONSTANT      00000003              3
+ADFM                              CONSTANT      00000007              7
+ADIE                              CONSTANT      00000006              6
+ADIF                              CONSTANT      00000006              6
+ADON                              CONSTANT      00000000              0
+ADRESH                            CONSTANT      0000001E             30
+ADRESL                            CONSTANT      0000009E            158
+BCLIE                             CONSTANT      00000003              3
+BCLIF                             CONSTANT      00000003              3
+BF                                CONSTANT      00000000              0
+BRGH                              CONSTANT      00000002              2
+C                                 CONSTANT      00000000              0
+C1INV                             CONSTANT      00000004              4
+C1OUT                             CONSTANT      00000006              6
+C2INV                             CONSTANT      00000005              5
+C2OUT                             CONSTANT      00000007              7
+CCP1CON                           CONSTANT      00000017             23
+CCP1IE                            CONSTANT      00000002              2
+CCP1IF                            CONSTANT      00000002              2
+CCP1M0                            CONSTANT      00000000              0
+CCP1M1                            CONSTANT      00000001              1
+CCP1M2                            CONSTANT      00000002              2
+CCP1M3                            CONSTANT      00000003              3
+CCP1X                             CONSTANT      00000005              5
+CCP1Y                             CONSTANT      00000004              4
+CCP2CON                           CONSTANT      0000001D             29
+CCP2IE                            CONSTANT      00000000              0
+CCP2IF                            CONSTANT      00000000              0
+CCP2M0                            CONSTANT      00000000              0
+CCP2M1                            CONSTANT      00000001              1
+CCP2M2                            CONSTANT      00000002              2
+CCP2M3                            CONSTANT      00000003              3
+CCP2X                             CONSTANT      00000005              5
+CCP2Y                             CONSTANT      00000004              4
+CCPR1                             CONSTANT      00000015             21
+CCPR1H                            CONSTANT      00000016             22
+CCPR1L                            CONSTANT      00000015             21
+CCPR2                             CONSTANT      0000001B             27
+CCPR2H                            CONSTANT      0000001C             28
+CCPR2L                            CONSTANT      0000001B             27
+CHS0                              CONSTANT      00000003              3
+CHS1                              CONSTANT      00000004              4
+CHS2                              CONSTANT      00000005              5
+CIS                               CONSTANT      00000003              3
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+CKE                               CONSTANT      00000006              6
+CKP                               CONSTANT      00000004              4
+CM0                               CONSTANT      00000000              0
+CM1                               CONSTANT      00000001              1
+CM2                               CONSTANT      00000002              2
+CMCON                             CONSTANT      0000009C            156
+CMIE                              CONSTANT      00000006              6
+CMIF                              CONSTANT      00000006              6
+CREN                              CONSTANT      00000004              4
+CSRC                              CONSTANT      00000007              7
+CVR0                              CONSTANT      00000000              0
+CVR1                              CONSTANT      00000001              1
+CVR2                              CONSTANT      00000002              2
+CVR3                              CONSTANT      00000003              3
+CVRCON                            CONSTANT      0000009D            157
+CVREN                             CONSTANT      00000007              7
+CVROE                             CONSTANT      00000006              6
+CVRR                              CONSTANT      00000005              5
+D                                 CONSTANT      00000005              5
+DATA_ADDRESS                      CONSTANT      00000005              5
+DC                                CONSTANT      00000001              1
+D_A                               CONSTANT      00000005              5
+D_NOT_A                           CONSTANT      00000005              5
+EEADR                             CONSTANT      0000010D            269
+EEADRH                            CONSTANT      0000010F            271
+EECON1                            CONSTANT      0000018C            396
+EECON2                            CONSTANT      0000018D            397
+EEDATA                            CONSTANT      0000010C            268
+EEDATH                            CONSTANT      0000010E            270
+EEIE                              CONSTANT      00000004              4
+EEIF                              CONSTANT      00000004              4
+EEPGD                             CONSTANT      00000007              7
+END_OF_INTERRUPT                  ADDRESS       00000055             85
+F                                 CONSTANT      00000001              1
+FERR                              CONSTANT      00000002              2
+FSR                               CONSTANT      00000004              4
+GCEN                              CONSTANT      00000007              7
+GIE                               CONSTANT      00000007              7
+GO                                CONSTANT      00000002              2
+GO_DONE                           CONSTANT      00000002              2
+GO_NOT_DONE                       CONSTANT      00000002              2
+I2C_DATA                          CONSTANT      00000005              5
+I2C_READ                          CONSTANT      00000002              2
+I2C_START                         CONSTANT      00000003              3
+I2C_STOP                          CONSTANT      00000004              4
+IBF                               CONSTANT      00000007              7
+IBOV                              CONSTANT      00000005              5
+INDF                              CONSTANT      00000000              0
+INTCON                            CONSTANT      0000000B             11
+INTE                              CONSTANT      00000004              4
+INTEDG                            CONSTANT      00000006              6
+INTF                              CONSTANT      00000001              1
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+IRP                               CONSTANT      00000007              7
+NOT_A                             CONSTANT      00000005              5
+NOT_ADDRESS                       CONSTANT      00000005              5
+NOT_BO                            CONSTANT      00000000              0
+NOT_BOR                           CONSTANT      00000000              0
+NOT_DONE                          CONSTANT      00000002              2
+NOT_PD                            CONSTANT      00000003              3
+NOT_POR                           CONSTANT      00000001              1
+NOT_RBPU                          CONSTANT      00000007              7
+NOT_RC8                           CONSTANT      00000006              6
+NOT_T1SYNC                        CONSTANT      00000002              2
+NOT_TO                            CONSTANT      00000004              4
+NOT_TX8                           CONSTANT      00000006              6
+NOT_W                             CONSTANT      00000002              2
+NOT_WRITE                         CONSTANT      00000002              2
+OBF                               CONSTANT      00000006              6
+OERR                              CONSTANT      00000001              1
+OPTION_REG                        CONSTANT      00000081            129
+P                                 CONSTANT      00000004              4
+PCFG0                             CONSTANT      00000000              0
+PCFG1                             CONSTANT      00000001              1
+PCFG2                             CONSTANT      00000002              2
+PCFG3                             CONSTANT      00000003              3
+PCL                               CONSTANT      00000002              2
+PCLATH                            CONSTANT      0000000A             10
+PCON                              CONSTANT      0000008E            142
+PEIE                              CONSTANT      00000006              6
+PEN                               CONSTANT      00000002              2
+PIE1                              CONSTANT      0000008C            140
+PIE2                              CONSTANT      0000008D            141
+PIR1                              CONSTANT      0000000C             12
+PIR2                              CONSTANT      0000000D             13
+PORTA                             CONSTANT      00000005              5
+PORTB                             CONSTANT      00000006              6
+PORTC                             CONSTANT      00000007              7
+PORTD                             CONSTANT      00000008              8
+PORTE                             CONSTANT      00000009              9
+PR2                               CONSTANT      00000092            146
+PS0                               CONSTANT      00000000              0
+PS1                               CONSTANT      00000001              1
+PS2                               CONSTANT      00000002              2
+PSA                               CONSTANT      00000003              3
+PSAVE                             EXTERNAL      00000000              0
+PSPIE                             CONSTANT      00000007              7
+PSPIF                             CONSTANT      00000007              7
+PSPMODE                           CONSTANT      00000004              4
+R                                 CONSTANT      00000002              2
+RA0                               CONSTANT      00000000              0
+RA1                               CONSTANT      00000001              1
+RA2                               CONSTANT      00000002              2
+RA3                               CONSTANT      00000003              3
+RA4                               CONSTANT      00000004              4
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+RA5                               CONSTANT      00000005              5
+RB0                               CONSTANT      00000000              0
+RB1                               CONSTANT      00000001              1
+RB2                               CONSTANT      00000002              2
+RB3                               CONSTANT      00000003              3
+RB4                               CONSTANT      00000004              4
+RB5                               CONSTANT      00000005              5
+RB6                               CONSTANT      00000006              6
+RB7                               CONSTANT      00000007              7
+RBIE                              CONSTANT      00000003              3
+RBIF                              CONSTANT      00000000              0
+RC0                               CONSTANT      00000000              0
+RC1                               CONSTANT      00000001              1
+RC2                               CONSTANT      00000002              2
+RC3                               CONSTANT      00000003              3
+RC4                               CONSTANT      00000004              4
+RC5                               CONSTANT      00000005              5
+RC6                               CONSTANT      00000006              6
+RC7                               CONSTANT      00000007              7
+RC8_9                             CONSTANT      00000006              6
+RC9                               CONSTANT      00000006              6
+RCD8                              CONSTANT      00000000              0
+RCEN                              CONSTANT      00000003              3
+RCIE                              CONSTANT      00000005              5
+RCIF                              CONSTANT      00000005              5
+RCREG                             CONSTANT      0000001A             26
+RCSTA                             CONSTANT      00000018             24
+RD                                CONSTANT      00000000              0
+RD0                               CONSTANT      00000000              0
+RD1                               CONSTANT      00000001              1
+RD2                               CONSTANT      00000002              2
+RD3                               CONSTANT      00000003              3
+RD4                               CONSTANT      00000004              4
+RD5                               CONSTANT      00000005              5
+RD6                               CONSTANT      00000006              6
+RD7                               CONSTANT      00000007              7
+RE0                               CONSTANT      00000000              0
+RE1                               CONSTANT      00000001              1
+RE2                               CONSTANT      00000002              2
+READ_WRITE                        CONSTANT      00000002              2
+RP0                               CONSTANT      00000005              5
+RP1                               CONSTANT      00000006              6
+RSEN                              CONSTANT      00000001              1
+RX9                               CONSTANT      00000006              6
+RX9D                              CONSTANT      00000000              0
+R_NOT_W                           CONSTANT      00000002              2
+R_W                               CONSTANT      00000002              2
+S                                 CONSTANT      00000003              3
+SEN                               CONSTANT      00000000              0
+SMP                               CONSTANT      00000007              7
+SPBRG                             CONSTANT      00000099            153
+SPEN                              CONSTANT      00000007              7
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+SREN                              CONSTANT      00000005              5
+SSAVE                             EXTERNAL      00000000              0
+SSPADD                            CONSTANT      00000093            147
+SSPBUF                            CONSTANT      00000013             19
+SSPCON                            CONSTANT      00000014             20
+SSPCON2                           CONSTANT      00000091            145
+SSPEN                             CONSTANT      00000005              5
+SSPIE                             CONSTANT      00000003              3
+SSPIF                             CONSTANT      00000003              3
+SSPM0                             CONSTANT      00000000              0
+SSPM1                             CONSTANT      00000001              1
+SSPM2                             CONSTANT      00000002              2
+SSPM3                             CONSTANT      00000003              3
+SSPOV                             CONSTANT      00000006              6
+SSPSTAT                           CONSTANT      00000094            148
+STATUS                            CONSTANT      00000003              3
+STK00                             EXTERNAL      00000000              0
+STK01                             EXTERNAL      00000000              0
+STK02                             EXTERNAL      00000000              0
+STK03                             EXTERNAL      00000000              0
+STK04                             EXTERNAL      00000000              0
+STK05                             EXTERNAL      00000000              0
+STK06                             EXTERNAL      00000000              0
+STK07                             EXTERNAL      00000000              0
+STK08                             EXTERNAL      00000000              0
+STK09                             EXTERNAL      00000000              0
+STK10                             EXTERNAL      00000000              0
+STK11                             EXTERNAL      00000000              0
+STK12                             EXTERNAL      00000000              0
+SYNC                              CONSTANT      00000004              4
+T0CS                              CONSTANT      00000005              5
+T0IE                              CONSTANT      00000005              5
+T0IF                              CONSTANT      00000002              2
+T0SE                              CONSTANT      00000004              4
+T1CKPS0                           CONSTANT      00000004              4
+T1CKPS1                           CONSTANT      00000005              5
+T1CON                             CONSTANT      00000010             16
+T1INSYNC                          CONSTANT      00000002              2
+T1OSCEN                           CONSTANT      00000003              3
+T1SYNC                            CONSTANT      00000002              2
+T2CKPS0                           CONSTANT      00000000              0
+T2CKPS1                           CONSTANT      00000001              1
+T2CON                             CONSTANT      00000012             18
+TMR0                              CONSTANT      00000001              1
+TMR0IE                            CONSTANT      00000005              5
+TMR0IF                            CONSTANT      00000002              2
+TMR1                              CONSTANT      0000000E             14
+TMR1CS                            CONSTANT      00000001              1
+TMR1H                             CONSTANT      0000000F             15
+TMR1IE                            CONSTANT      00000000              0
+TMR1IF                            CONSTANT      00000000              0
+TMR1L                             CONSTANT      0000000E             14
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+TMR1ON                            CONSTANT      00000000              0
+TMR2                              CONSTANT      00000011             17
+TMR2IE                            CONSTANT      00000001              1
+TMR2IF                            CONSTANT      00000001              1
+TMR2ON                            CONSTANT      00000002              2
+TOUTPS0                           CONSTANT      00000003              3
+TOUTPS1                           CONSTANT      00000004              4
+TOUTPS2                           CONSTANT      00000005              5
+TOUTPS3                           CONSTANT      00000006              6
+TRISA                             CONSTANT      00000085            133
+TRISA0                            CONSTANT      00000000              0
+TRISA1                            CONSTANT      00000001              1
+TRISA2                            CONSTANT      00000002              2
+TRISA3                            CONSTANT      00000003              3
+TRISA4                            CONSTANT      00000004              4
+TRISA5                            CONSTANT      00000005              5
+TRISB                             CONSTANT      00000086            134
+TRISB0                            CONSTANT      00000000              0
+TRISB1                            CONSTANT      00000001              1
+TRISB2                            CONSTANT      00000002              2
+TRISB3                            CONSTANT      00000003              3
+TRISB4                            CONSTANT      00000004              4
+TRISB5                            CONSTANT      00000005              5
+TRISB6                            CONSTANT      00000006              6
+TRISB7                            CONSTANT      00000007              7
+TRISC                             CONSTANT      00000087            135
+TRISC0                            CONSTANT      00000000              0
+TRISC1                            CONSTANT      00000001              1
+TRISC2                            CONSTANT      00000002              2
+TRISC3                            CONSTANT      00000003              3
+TRISC4                            CONSTANT      00000004              4
+TRISC5                            CONSTANT      00000005              5
+TRISC6                            CONSTANT      00000006              6
+TRISC7                            CONSTANT      00000007              7
+TRISD                             CONSTANT      00000088            136
+TRISD0                            CONSTANT      00000000              0
+TRISD1                            CONSTANT      00000001              1
+TRISD2                            CONSTANT      00000002              2
+TRISD3                            CONSTANT      00000003              3
+TRISD4                            CONSTANT      00000004              4
+TRISD5                            CONSTANT      00000005              5
+TRISD6                            CONSTANT      00000006              6
+TRISD7                            CONSTANT      00000007              7
+TRISE                             CONSTANT      00000089            137
+TRISE0                            CONSTANT      00000000              0
+TRISE1                            CONSTANT      00000001              1
+TRISE2                            CONSTANT      00000002              2
+TRMT                              CONSTANT      00000001              1
+TX8_9                             CONSTANT      00000006              6
+TX9                               CONSTANT      00000006              6
+TX9D                              CONSTANT      00000000              0
+TXD8                              CONSTANT      00000000              0
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE 12
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+TXEN                              CONSTANT      00000005              5
+TXIE                              CONSTANT      00000004              4
+TXIF                              CONSTANT      00000004              4
+TXREG                             CONSTANT      00000019             25
+TXSTA                             CONSTANT      00000098            152
+UA                                CONSTANT      00000001              1
+W                                 CONSTANT      00000000              0
+WCOL                              CONSTANT      00000007              7
+WR                                CONSTANT      00000001              1
+WREN                              CONSTANT      00000002              2
+WRERR                             CONSTANT      00000003              3
+WSAVE                             EXTERNAL      00000000              0
+Z                                 CONSTANT      00000002              2
+_00114_DS_                        ADDRESS       0000002D             45
+_00116_DS_                        ADDRESS       0000003E             62
+_00117_DS_                        ADDRESS       00000043             67
+_BODEN_OFF                        CONSTANT      00003FBF          16319
+_BODEN_ON                         CONSTANT      00003FFF          16383
+_BOREN_OFF                        CONSTANT      00003FBF          16319
+_BOREN_ON                         CONSTANT      00003FFF          16383
+_CONFIG                           CONSTANT      00002007           8199
+_CPD_OFF                          CONSTANT      00003FFF          16383
+_CPD_ON                           CONSTANT      00003EFF          16127
+_CP_ALL                           CONSTANT      00001FFF           8191
+_CP_OFF                           CONSTANT      00003FFF          16383
+_CP_ON                            CONSTANT      00001FFF           8191
+_DEBUG_OFF                        CONSTANT      00003FFF          16383
+_DEBUG_ON                         CONSTANT      000037FF          14335
+_DEVID1                           CONSTANT      00002006           8198
+_DIG_CLK_update                   EXTERNAL      00000000              0
+_FOSC_EXTRC                       CONSTANT      00003FFF          16383
+_FOSC_HS                          CONSTANT      00003FFE          16382
+_FOSC_LP                          CONSTANT      00003FFC          16380
+_FOSC_XT                          CONSTANT      00003FFD          16381
+_HS_OSC                           CONSTANT      00003FFE          16382
+_IDLOC0                           CONSTANT      00002000           8192
+_IDLOC1                           CONSTANT      00002001           8193
+_IDLOC2                           CONSTANT      00002002           8194
+_IDLOC3                           CONSTANT      00002003           8195
+_INTCONbits                       EXTERNAL      00000000              0
+_LP_OSC                           CONSTANT      00003FFC          16380
+_LVP_OFF                          CONSTANT      00003F7F          16255
+_LVP_ON                           CONSTANT      00003FFF          16383
+_OPTION_REGbits                   EXTERNAL      00000000              0
+_PB_Update                        EXTERNAL      00000000              0
+_PWRTE_OFF                        CONSTANT      00003FFF          16383
+_PWRTE_ON                         CONSTANT      00003FF7          16375
+_RC_OSC                           CONSTANT      00003FFF          16383
+_SSD_Update                       EXTERNAL      00000000              0
+_SSD_Update_2                     EXTERNAL      00000000              0
+_TMR0                             EXTERNAL      00000000              0
+_TMR0_Init                        GLOBAL        00000000              0
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+_TMR0_Start                       GLOBAL        00000000              0
+_TMR0_Update                      GLOBAL        00000004              4
+_TMR0_Update_counter_65536_34     STATIC        00000000              0
+_WDTE_OFF                         CONSTANT      00003FFB          16379
+_WDTE_ON                          CONSTANT      00003FFF          16383
+_WDT_OFF                          CONSTANT      00003FFB          16379
+_WDT_ON                           CONSTANT      00003FFF          16383
+_WRT_1FOURTH                      CONSTANT      00003BFF          15359
+_WRT_256                          CONSTANT      00003DFF          15871
+_WRT_HALF                         CONSTANT      000039FF          14847
+_WRT_OFF                          CONSTANT      00003FFF          16383
+_XT_OSC                           CONSTANT      00003FFD          16381
+__14_BIT                          CONSTANT      00000001              1
+__16F877A                         CONSTANT      00000001              1
+__ACTIVE_BANK_ADDR                VARIABLE      FFFFFFFF             -1
+__ACTIVE_PAGE_ADDR                VARIABLE      FFFFFFFF             -1
+__ASSUMED_BANK_ADDR               VARIABLE      FFFFFFFF             -1
+__BANK_0                          CONSTANT      00000000              0
+__BANK_1                          CONSTANT      00000080            128
+__BANK_2                          CONSTANT      00000100            256
+__BANK_3                          CONSTANT      00000180            384
+__BANK_BITS                       CONSTANT      00000180            384
+__BANK_FIRST                      CONSTANT      00000000              0
+__BANK_INV                        CONSTANT      FFFFFFFF             -1
+__BANK_LAST                       CONSTANT      00000180            384
+__BANK_MASK                       CONSTANT      0000007F            127
+__BANK_SHIFT                      CONSTANT      00000007              7
+__BANK_SIZE                       CONSTANT      00000080            128
+__CODE_END                        CONSTANT      00001FFF           8191
+__CODE_START                      CONSTANT      00000000              0
+__COMMON_RAM_END                  CONSTANT      0000007F            127
+__COMMON_RAM_START                CONSTANT      00000070            112
+__CONFIG_END                      CONSTANT      00002007           8199
+__CONFIG_START                    CONSTANT      00002007           8199
+__EEPROM_END                      CONSTANT      000021FF           8703
+__EEPROM_START                    CONSTANT      00002100           8448
+__GPUTILS_SVN_VERSION             CONSTANT      00000505           1285
+__GPUTILS_VERSION_MAJOR           CONSTANT      00000001              1
+__GPUTILS_VERSION_MICRO           CONSTANT      00000000              0
+__GPUTILS_VERSION_MINOR           CONSTANT      00000005              5
+__IDLOCS_END                      CONSTANT      00002003           8195
+__IDLOCS_START                    CONSTANT      00002000           8192
+__NUM_BANKS                       CONSTANT      00000004              4
+__NUM_PAGES                       CONSTANT      00000004              4
+__PAGE_0                          CONSTANT      00000000              0
+__PAGE_1                          CONSTANT      00000800           2048
+__PAGE_2                          CONSTANT      00001000           4096
+__PAGE_3                          CONSTANT      00001800           6144
+__PAGE_BITS                       CONSTANT      00001800           6144
+__PAGE_FIRST                      CONSTANT      00000000              0
+__PAGE_INV                        CONSTANT      FFFFFFFF             -1
+__PAGE_LAST                       CONSTANT      00001800           6144
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\t   8-6-2020  15:31:06          PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+__PAGE_MASK                       CONSTANT      000007FF           2047
+__PAGE_SHIFT                      CONSTANT      0000000B             11
+__PAGE_SIZE                       CONSTANT      00000800           2048
+__VECTOR_INT                      CONSTANT      00000004              4
+__VECTOR_RESET                    CONSTANT      00000000              0
+__WHILE_LOOP_COUNT_MAX            CONSTANT      000000FF            255
+___sdcc_saved_fsr                 STATIC        00000001              1
+__sdcc_interrupt                  ADDRESS       00000004              4
+_c_interrupt_0019                 ADDRESS       00000019             25
+_c_interrupt_001E                 ADDRESS       0000001E             30
+_c_interrupt_0023                 ADDRESS       00000023             35
+_c_interrupt_0028                 ADDRESS       00000028             40
+_c_interrupt_0030                 ADDRESS       00000030             48
+_c_interrupt_003B                 ADDRESS       0000003B             59
+_c_interrupt_0041                 ADDRESS       00000041             65
+_get_mode                         EXTERNAL      00000000              0
+_hour_update                      EXTERNAL      00000000              0
+_minutes_update                   EXTERNAL      00000000              0
+r0x1002                           STATIC        00000000              0
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

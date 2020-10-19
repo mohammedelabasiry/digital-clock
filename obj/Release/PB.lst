@@ -1,0 +1,1479 @@
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  1
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00001 ;--------------------------------------------------------
+                      00002 ; File Created by SDCC : free open source ANSI-C Compiler
+                      00003 ; Version 4.0.0 #11528 (MINGW64)
+                      00004 ;--------------------------------------------------------
+                      00005 ; PIC port for the 14-bit core
+                      00006 ;--------------------------------------------------------
+                      00007 ;       .file   "PB.c"
+                      00008         list    p=16f877a
+                      00009         radix dec
+                      00010         include "p16f877a.inc"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Oct 21 2015
+                      00005 ;  MPASM PIC16F877A processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2015 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00567         LIST
+                      00011 ;--------------------------------------------------------
+                      00012 ; external declarations
+                      00013 ;--------------------------------------------------------
+  0000                00014         extern  __muluchar
+  0000                00015         extern  _GPIO_GetPortPinState
+  0000                00016         extern  _GPIO_InitPortPin
+                      00017 
+  0000                00018         extern PSAVE
+  0000                00019         extern SSAVE
+  0000                00020         extern WSAVE
+  0000                00021         extern STK12
+  0000                00022         extern STK11
+  0000                00023         extern STK10
+  0000                00024         extern STK09
+  0000                00025         extern STK08
+  0000                00026         extern STK07
+  0000                00027         extern STK06
+  0000                00028         extern STK05
+  0000                00029         extern STK04
+  0000                00030         extern STK03
+  0000                00031         extern STK02
+  0000                00032         extern STK01
+  0000                00033         extern STK00
+                      00034 ;--------------------------------------------------------
+                      00035 ; global declarations
+                      00036 ;--------------------------------------------------------
+  0000                00037         global  _PB_Init
+  0000                00038         global  _PB_Update
+  0000                00039         global  _PB_GetState
+                      00040 
+                      00041 ;--------------------------------------------------------
+                      00042 ; global definitions
+                      00043 ;--------------------------------------------------------
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  2
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00044 UD_PB_0 udata
+0000                  00045 _pb_info        res     12
+                      00046 
+                      00047 ;--------------------------------------------------------
+                      00048 ; absolute symbol definitions
+                      00049 ;--------------------------------------------------------
+                      00050 ;--------------------------------------------------------
+                      00051 ; compiler-defined variables
+                      00052 ;--------------------------------------------------------
+                      00053 UDL_PB_0        udata
+0000                  00054 r0x101B res     1
+0001                  00055 r0x101C res     1
+0002                  00056 r0x101D res     1
+0003                  00057 r0x101E res     1
+0004                  00058 r0x101F res     1
+0005                  00059 r0x100F res     1
+0006                  00060 r0x1010 res     1
+0007                  00061 r0x1011 res     1
+0008                  00062 r0x1012 res     1
+0009                  00063 r0x1013 res     1
+000A                  00064 r0x1014 res     1
+000B                  00065 r0x1015 res     1
+000C                  00066 r0x1016 res     1
+000D                  00067 r0x1017 res     1
+000E                  00068 r0x1018 res     1
+000F                  00069 r0x1019 res     1
+0010                  00070 r0x101A res     1
+0011                  00071 r0x100C res     1
+0012                  00072 r0x100D res     1
+                      00073 ;--------------------------------------------------------
+                      00074 ; initialized data
+                      00075 ;--------------------------------------------------------
+                      00076 ;--------------------------------------------------------
+                      00077 ; initialized absolute data
+                      00078 ;--------------------------------------------------------
+                      00079 ;--------------------------------------------------------
+                      00080 ; overlayable items in internal ram 
+                      00081 ;--------------------------------------------------------
+                      00082 ;       udata_ovr
+                      00083 ;--------------------------------------------------------
+                      00084 ; code
+                      00085 ;--------------------------------------------------------
+                      00086 code_PB code
+                      00087 ;***
+                      00088 ;  pBlock Stats: dbName = C
+                      00089 ;***
+                      00090 ;has an exit
+                      00091 ;functions called:
+                      00092 ;   __muluchar
+                      00093 ;   __muluchar
+                      00094 ;4 compiler assigned registers:
+                      00095 ;   r0x100C
+                      00096 ;   STK00
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  3
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00097 ;   r0x100D
+                      00098 ;   r0x100E
+                      00099 ;; Starting pCode block
+                      00100 S_PB__PB_GetState       code
+0000                  00101 _PB_GetState:
+                      00102 ; 2 exit points
+                      00103 ;       .line   129; "PB.c"     tPB_State PB_GetState(tPB pb)
+0000   0??? 0???      00104         BANKSEL r0x100C
+0002   00??           00105         MOVWF   r0x100C
+                      00106 ;       .line   133; "PB.c"     ret = pb_info[pb].state;
+0003   3003           00107         MOVLW   0x03
+0004   00??           00108         MOVWF   STK00
+0005   08??           00109         MOVF    r0x100C,W
+0006   0??? 0???      00110         PAGESEL __muluchar
+0008   2???           00111         CALL    __muluchar
+0009   0??? 0???      00112         PAGESEL $
+000B   0??? 0???      00113         BANKSEL r0x100D
+000D   00??           00114         MOVWF   r0x100D
+000E   08??           00115         MOVF    STK00,W
+000F   00??           00116         MOVWF   r0x100C
+0010   3E??           00117         ADDLW   (_pb_info + 0)
+0011   00??           00118         MOVWF   r0x100C
+0012   08??           00119         MOVF    r0x100D,W
+0013   1803           00120         BTFSC   STATUS,0
+0014   0F??           00121         INCFSZ  r0x100D,W
+0015   3E??           00122         ADDLW   high (_pb_info + 0)
+0016   00??           00123         MOVWF   r0x100D
+0017   3002           00124         MOVLW   0x02
+0018   07??           00125         ADDWF   r0x100C,F
+0019   1803           00126         BTFSC   STATUS,0
+001A   0A??           00127         INCF    r0x100D,F
+001B   08??           00128         MOVF    r0x100C,W
+001C   1283 1303      00129         BANKSEL FSR
+001E   0084           00130         MOVWF   FSR
+001F   1383           00131         BCF     STATUS,7
+0020   0??? 0???      00132         BANKSEL r0x100D
+0022   18??           00133         BTFSC   r0x100D,0
+0023   1783           00134         BSF     STATUS,7
+0024   1283 1303      00135         BANKSEL INDF
+0026   0800           00136         MOVF    INDF,W
+                      00137 ;;1     MOVWF   r0x100E
+                      00138 ;       .line   136; "PB.c"     }
+0027   0008           00139         RETURN  
+                      00140 ; exit point of _PB_GetState
+                      00141 
+                      00142 ;***
+                      00143 ;  pBlock Stats: dbName = C
+                      00144 ;***
+                      00145 ;has an exit
+                      00146 ;functions called:
+                      00147 ;   _GPIO_GetPortPinState
+                      00148 ;   _GPIO_GetPortPinState
+                      00149 ;   _GPIO_GetPortPinState
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  4
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00150 ;   _GPIO_GetPortPinState
+                      00151 ;   _GPIO_GetPortPinState
+                      00152 ;   _GPIO_GetPortPinState
+                      00153 ;   _GPIO_GetPortPinState
+                      00154 ;   _GPIO_GetPortPinState
+                      00155 ;13 compiler assigned registers:
+                      00156 ;   r0x100F
+                      00157 ;   r0x1010
+                      00158 ;   r0x1011
+                      00159 ;   r0x1012
+                      00160 ;   r0x1013
+                      00161 ;   r0x1014
+                      00162 ;   r0x1015
+                      00163 ;   r0x1016
+                      00164 ;   r0x1017
+                      00165 ;   r0x1018
+                      00166 ;   STK00
+                      00167 ;   r0x1019
+                      00168 ;   r0x101A
+                      00169 ;; Starting pCode block
+                      00170 S_PB__PB_Update code
+0000                  00171 _PB_Update:
+                      00172 ; 2 exit points
+                      00173 ;       .line   66; "PB.c"      for (current_button = PB_PLUS; current_button < PB_UNUSED_2 ; current_bu
+                            tton++)
+0000   0??? 0???      00174         BANKSEL r0x100F
+0002   01??           00175         CLRF    r0x100F
+0003   01??           00176         CLRF    r0x1010
+0004   01??           00177         CLRF    r0x1011
+0005   01??           00178         CLRF    r0x1012
+0006   01??           00179         CLRF    r0x1013
+0007                  00180 _00157_DS_:
+                      00181 ;       .line   69; "PB.c"      pb_info[current_button].samples[0] = pb_info[current_button].samples[1];
+0007   0??? 0???      00182         BANKSEL r0x1012
+0009   08??           00183         MOVF    r0x1012,W
+000A   3E??           00184         ADDLW   (_pb_info + 0)
+000B   00??           00185         MOVWF   r0x1014
+000C   30??           00186         MOVLW   high (_pb_info + 0)
+000D   00??           00187         MOVWF   r0x1015
+000E   08??           00188         MOVF    r0x1013,W
+000F   1803           00189         BTFSC   STATUS,0
+0010   0F??           00190         INCFSZ  r0x1013,W
+0011   07??           00191         ADDWF   r0x1015,F
+0012   08??           00192         MOVF    r0x1012,W
+0013   3E??           00193         ADDLW   (_pb_info + 0)
+0014   00??           00194         MOVWF   r0x1016
+0015   30??           00195         MOVLW   high (_pb_info + 0)
+0016   00??           00196         MOVWF   r0x1017
+0017   08??           00197         MOVF    r0x1013,W
+0018   1803           00198         BTFSC   STATUS,0
+0019   0F??           00199         INCFSZ  r0x1013,W
+001A   07??           00200         ADDWF   r0x1017,F
+001B   0A??           00201         INCF    r0x1016,F
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  5
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+001C   1903           00202         BTFSC   STATUS,2
+001D   0A??           00203         INCF    r0x1017,F
+001E   08??           00204         MOVF    r0x1016,W
+001F   1283 1303      00205         BANKSEL FSR
+0021   0084           00206         MOVWF   FSR
+0022   1383           00207         BCF     STATUS,7
+0023   0??? 0???      00208         BANKSEL r0x1017
+0025   18??           00209         BTFSC   r0x1017,0
+0026   1783           00210         BSF     STATUS,7
+0027   1283 1303      00211         BANKSEL INDF
+0029   0800           00212         MOVF    INDF,W
+002A   0??? 0???      00213         BANKSEL r0x1018
+002C   00??           00214         MOVWF   r0x1018
+002D   08??           00215         MOVF    r0x1014,W
+002E   1283 1303      00216         BANKSEL FSR
+0030   0084           00217         MOVWF   FSR
+0031   1383           00218         BCF     STATUS,7
+0032   0??? 0???      00219         BANKSEL r0x1015
+0034   18??           00220         BTFSC   r0x1015,0
+0035   1783           00221         BSF     STATUS,7
+0036   08??           00222         MOVF    r0x1018,W
+0037   1283 1303      00223         BANKSEL INDF
+0039   0080           00224         MOVWF   INDF
+                      00225 ;;swapping arguments (AOP_TYPEs 1/2)
+                      00226 ;;unsigned compare: left >= lit(0x4=4), size=1
+                      00227 ;       .line   71; "PB.c"      switch(current_button)
+003A   3004           00228         MOVLW   0x04
+003B   0??? 0???      00229         BANKSEL r0x100F
+003D   02??           00230         SUBWF   r0x100F,W
+003E   1803           00231         BTFSC   STATUS,0
+003F   2???           00232         GOTO    _00139_DS_
+                      00233 ;;genSkipc:3307: created from rifx:00000000047A57B0
+0040   30??           00234         MOVLW   HIGH(_00199_DS_)
+0041   1283 1303      00235         BANKSEL PCLATH
+0043   008A           00236         MOVWF   PCLATH
+0044   30??           00237         MOVLW   _00199_DS_
+0045   0??? 0???      00238         BANKSEL r0x100F
+0047   07??           00239         ADDWF   r0x100F,W
+0048   1C03           00240         BTFSS   STATUS,0
+0049   2???           00241         GOTO    _00001_DS_
+004A   1283 1303      00242         BANKSEL PCLATH
+004C   0A8A           00243         INCF    PCLATH,F
+004D                  00244 _00001_DS_:
+004D   0082           00245         MOVWF   PCL
+004E                  00246 _00199_DS_:
+004E   2???           00247         GOTO    _00134_DS_
+004F   2???           00248         GOTO    _00135_DS_
+0050   2???           00249         GOTO    _00136_DS_
+0051   2???           00250         GOTO    _00137_DS_
+0052                  00251 _00134_DS_:
+                      00252 ;       .line   74; "PB.c"      pb_info[current_button].samples[1] = GPIO_GetPortPinState(PB_PLUS_PORT, 
+                            PB_PLUS_PIN);
+0052   3000           00253         MOVLW   0x00
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  6
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0053   00??           00254         MOVWF   STK00
+0054   3001           00255         MOVLW   0x01
+0055   0??? 0???      00256         PAGESEL _GPIO_GetPortPinState
+0057   2???           00257         CALL    _GPIO_GetPortPinState
+0058   0??? 0???      00258         PAGESEL $
+005A   0??? 0???      00259         BANKSEL r0x1014
+005C   00??           00260         MOVWF   r0x1014
+005D   08??           00261         MOVF    r0x1016,W
+005E   1283 1303      00262         BANKSEL FSR
+0060   0084           00263         MOVWF   FSR
+0061   1383           00264         BCF     STATUS,7
+0062   0??? 0???      00265         BANKSEL r0x1017
+0064   18??           00266         BTFSC   r0x1017,0
+0065   1783           00267         BSF     STATUS,7
+0066   08??           00268         MOVF    r0x1014,W
+0067   1283 1303      00269         BANKSEL INDF
+0069   0080           00270         MOVWF   INDF
+                      00271 ;       .line   75; "PB.c"      break;
+006A   2???           00272         GOTO    _00139_DS_
+006B                  00273 _00135_DS_:
+                      00274 ;       .line   77; "PB.c"      pb_info[current_button].samples[1] = GPIO_GetPortPinState(PB_MINUS_PORT,
+                             PB_MINUS_PIN);
+006B   3001           00275         MOVLW   0x01
+006C   00??           00276         MOVWF   STK00
+006D   3001           00277         MOVLW   0x01
+006E   0??? 0???      00278         PAGESEL _GPIO_GetPortPinState
+0070   2???           00279         CALL    _GPIO_GetPortPinState
+0071   0??? 0???      00280         PAGESEL $
+0073   0??? 0???      00281         BANKSEL r0x1014
+0075   00??           00282         MOVWF   r0x1014
+0076   08??           00283         MOVF    r0x1016,W
+0077   1283 1303      00284         BANKSEL FSR
+0079   0084           00285         MOVWF   FSR
+007A   1383           00286         BCF     STATUS,7
+007B   0??? 0???      00287         BANKSEL r0x1017
+007D   18??           00288         BTFSC   r0x1017,0
+007E   1783           00289         BSF     STATUS,7
+007F   08??           00290         MOVF    r0x1014,W
+0080   1283 1303      00291         BANKSEL INDF
+0082   0080           00292         MOVWF   INDF
+                      00293 ;       .line   78; "PB.c"      break;
+0083   2???           00294         GOTO    _00139_DS_
+0084                  00295 _00136_DS_:
+                      00296 ;       .line   80; "PB.c"      pb_info[current_button].samples[1] = GPIO_GetPortPinState(PB_SET_PORT, P
+                            B_SET_PIN);
+0084   3002           00297         MOVLW   0x02
+0085   00??           00298         MOVWF   STK00
+0086   3001           00299         MOVLW   0x01
+0087   0??? 0???      00300         PAGESEL _GPIO_GetPortPinState
+0089   2???           00301         CALL    _GPIO_GetPortPinState
+008A   0??? 0???      00302         PAGESEL $
+008C   0??? 0???      00303         BANKSEL r0x1014
+008E   00??           00304         MOVWF   r0x1014
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  7
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+008F   08??           00305         MOVF    r0x1016,W
+0090   1283 1303      00306         BANKSEL FSR
+0092   0084           00307         MOVWF   FSR
+0093   1383           00308         BCF     STATUS,7
+0094   0??? 0???      00309         BANKSEL r0x1017
+0096   18??           00310         BTFSC   r0x1017,0
+0097   1783           00311         BSF     STATUS,7
+0098   08??           00312         MOVF    r0x1014,W
+0099   1283 1303      00313         BANKSEL INDF
+009B   0080           00314         MOVWF   INDF
+                      00315 ;       .line   81; "PB.c"      break;
+009C   2???           00316         GOTO    _00139_DS_
+009D                  00317 _00137_DS_:
+                      00318 ;       .line   83; "PB.c"      pb_info[current_button].samples[1] = GPIO_GetPortPinState(PORT_B, 3);
+009D   3003           00319         MOVLW   0x03
+009E   00??           00320         MOVWF   STK00
+009F   3001           00321         MOVLW   0x01
+00A0   0??? 0???      00322         PAGESEL _GPIO_GetPortPinState
+00A2   2???           00323         CALL    _GPIO_GetPortPinState
+00A3   0??? 0???      00324         PAGESEL $
+00A5   0??? 0???      00325         BANKSEL r0x1014
+00A7   00??           00326         MOVWF   r0x1014
+00A8   08??           00327         MOVF    r0x1016,W
+00A9   1283 1303      00328         BANKSEL FSR
+00AB   0084           00329         MOVWF   FSR
+00AC   1383           00330         BCF     STATUS,7
+00AD   0??? 0???      00331         BANKSEL r0x1017
+00AF   18??           00332         BTFSC   r0x1017,0
+00B0   1783           00333         BSF     STATUS,7
+00B1   08??           00334         MOVF    r0x1014,W
+00B2   1283 1303      00335         BANKSEL INDF
+00B4   0080           00336         MOVWF   INDF
+00B5                  00337 _00139_DS_:
+                      00338 ;       .line   91; "PB.c"      switch(pb_info[current_button].state)
+00B5   0??? 0???      00339         BANKSEL r0x1010
+00B7   08??           00340         MOVF    r0x1010,W
+00B8   3E??           00341         ADDLW   (_pb_info + 0)
+00B9   00??           00342         MOVWF   r0x1014
+00BA   30??           00343         MOVLW   high (_pb_info + 0)
+00BB   00??           00344         MOVWF   r0x1015
+00BC   08??           00345         MOVF    r0x1011,W
+00BD   1803           00346         BTFSC   STATUS,0
+00BE   0F??           00347         INCFSZ  r0x1011,W
+00BF   07??           00348         ADDWF   r0x1015,F
+00C0   3002           00349         MOVLW   0x02
+00C1   07??           00350         ADDWF   r0x1014,W
+00C2   00??           00351         MOVWF   r0x1016
+00C3   01??           00352         CLRF    r0x1017
+00C4   0D??           00353         RLF     r0x1017,F
+00C5   08??           00354         MOVF    r0x1015,W
+00C6   07??           00355         ADDWF   r0x1017,F
+00C7   08??           00356         MOVF    r0x1016,W
+00C8   1283 1303      00357         BANKSEL FSR
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  8
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+00CA   0084           00358         MOVWF   FSR
+00CB   1383           00359         BCF     STATUS,7
+00CC   0??? 0???      00360         BANKSEL r0x1017
+00CE   18??           00361         BTFSC   r0x1017,0
+00CF   1783           00362         BSF     STATUS,7
+00D0   1283 1303      00363         BANKSEL INDF
+00D2   0800           00364         MOVF    INDF,W
+00D3   0??? 0???      00365         BANKSEL r0x1018
+00D5   00??           00366         MOVWF   r0x1018
+                      00367 ;;swapping arguments (AOP_TYPEs 1/2)
+                      00368 ;;unsigned compare: left >= lit(0x4=4), size=1
+00D6   3004           00369         MOVLW   0x04
+00D7   02??           00370         SUBWF   r0x1018,W
+00D8   1803           00371         BTFSC   STATUS,0
+00D9   2???           00372         GOTO    _00158_DS_
+                      00373 ;;genSkipc:3307: created from rifx:00000000047A57B0
+00DA   30??           00374         MOVLW   HIGH(_00201_DS_)
+00DB   1283 1303      00375         BANKSEL PCLATH
+00DD   008A           00376         MOVWF   PCLATH
+00DE   30??           00377         MOVLW   _00201_DS_
+00DF   0??? 0???      00378         BANKSEL r0x1018
+00E1   07??           00379         ADDWF   r0x1018,W
+00E2   1C03           00380         BTFSS   STATUS,0
+00E3   2???           00381         GOTO    _00002_DS_
+00E4   1283 1303      00382         BANKSEL PCLATH
+00E6   0A8A           00383         INCF    PCLATH,F
+00E7                  00384 _00002_DS_:
+00E7   0082           00385         MOVWF   PCL
+00E8                  00386 _00201_DS_:
+00E8   2???           00387         GOTO    _00140_DS_
+00E9   2???           00388         GOTO    _00144_DS_
+00EA   2???           00389         GOTO    _00147_DS_
+00EB   2???           00390         GOTO    _00151_DS_
+00EC                  00391 _00140_DS_:
+                      00392 ;       .line   94; "PB.c"      if((pb_info[current_button].samples[0] == PB_PRESSED_VOLTAGE) &&
+00EC   0??? 0???      00393         BANKSEL r0x1014
+00EE   08??           00394         MOVF    r0x1014,W
+00EF   1283 1303      00395         BANKSEL FSR
+00F1   0084           00396         MOVWF   FSR
+00F2   1383           00397         BCF     STATUS,7
+00F3   0??? 0???      00398         BANKSEL r0x1015
+00F5   18??           00399         BTFSC   r0x1015,0
+00F6   1783           00400         BSF     STATUS,7
+00F7   1283 1303      00401         BANKSEL INDF
+00F9   0800           00402         MOVF    INDF,W
+00FA   0??? 0???      00403         BANKSEL r0x1018
+00FC   00??           00404         MOVWF   r0x1018
+00FD   08??           00405         MOVF    r0x1018,W
+00FE   1D03           00406         BTFSS   STATUS,2
+00FF   2???           00407         GOTO    _00158_DS_
+                      00408 ;       .line   95; "PB.c"      (pb_info[current_button].samples[1] == PB_PRESSED_VOLTAGE))
+0100   3001           00409         MOVLW   0x01
+0101   07??           00410         ADDWF   r0x1014,W
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE  9
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0102   00??           00411         MOVWF   r0x1018
+0103   01??           00412         CLRF    r0x1019
+0104   0D??           00413         RLF     r0x1019,F
+0105   08??           00414         MOVF    r0x1015,W
+0106   07??           00415         ADDWF   r0x1019,F
+0107   08??           00416         MOVF    r0x1018,W
+0108   1283 1303      00417         BANKSEL FSR
+010A   0084           00418         MOVWF   FSR
+010B   1383           00419         BCF     STATUS,7
+010C   0??? 0???      00420         BANKSEL r0x1019
+010E   18??           00421         BTFSC   r0x1019,0
+010F   1783           00422         BSF     STATUS,7
+0110   1283 1303      00423         BANKSEL INDF
+0112   0800           00424         MOVF    INDF,W
+0113   0??? 0???      00425         BANKSEL r0x101A
+0115   00??           00426         MOVWF   r0x101A
+0116   08??           00427         MOVF    r0x101A,W
+0117   1D03           00428         BTFSS   STATUS,2
+0118   2???           00429         GOTO    _00158_DS_
+                      00430 ;       .line   97; "PB.c"      pb_info[current_button].state = PB_PRE_PRESSED;
+0119   08??           00431         MOVF    r0x1016,W
+011A   1283 1303      00432         BANKSEL FSR
+011C   0084           00433         MOVWF   FSR
+011D   1383           00434         BCF     STATUS,7
+011E   0??? 0???      00435         BANKSEL r0x1017
+0120   18??           00436         BTFSC   r0x1017,0
+0121   1783           00437         BSF     STATUS,7
+0122   3001           00438         MOVLW   0x01
+0123   1283 1303      00439         BANKSEL INDF
+0125   0080           00440         MOVWF   INDF
+                      00441 ;       .line   99; "PB.c"      break;
+0126   2???           00442         GOTO    _00158_DS_
+0127                  00443 _00144_DS_:
+                      00444 ;       .line   101; "PB.c"     if(pb_info[current_button].samples[1] == PB_PRESSED_VOLTAGE)
+0127   3001           00445         MOVLW   0x01
+0128   0??? 0???      00446         BANKSEL r0x1014
+012A   07??           00447         ADDWF   r0x1014,W
+012B   00??           00448         MOVWF   r0x1018
+012C   01??           00449         CLRF    r0x1019
+012D   0D??           00450         RLF     r0x1019,F
+012E   08??           00451         MOVF    r0x1015,W
+012F   07??           00452         ADDWF   r0x1019,F
+0130   08??           00453         MOVF    r0x1018,W
+0131   1283 1303      00454         BANKSEL FSR
+0133   0084           00455         MOVWF   FSR
+0134   1383           00456         BCF     STATUS,7
+0135   0??? 0???      00457         BANKSEL r0x1019
+0137   18??           00458         BTFSC   r0x1019,0
+0138   1783           00459         BSF     STATUS,7
+0139   1283 1303      00460         BANKSEL INDF
+013B   0800           00461         MOVF    INDF,W
+013C   0??? 0???      00462         BANKSEL r0x101A
+013E   00??           00463         MOVWF   r0x101A
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 10
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+013F   08??           00464         MOVF    r0x101A,W
+0140   1D03           00465         BTFSS   STATUS,2
+0141   2???           00466         GOTO    _00158_DS_
+                      00467 ;       .line   103; "PB.c"     pb_info[current_button].state = PB_PRESSED;
+0142   08??           00468         MOVF    r0x1016,W
+0143   1283 1303      00469         BANKSEL FSR
+0145   0084           00470         MOVWF   FSR
+0146   1383           00471         BCF     STATUS,7
+0147   0??? 0???      00472         BANKSEL r0x1017
+0149   18??           00473         BTFSC   r0x1017,0
+014A   1783           00474         BSF     STATUS,7
+014B   3002           00475         MOVLW   0x02
+014C   1283 1303      00476         BANKSEL INDF
+014E   0080           00477         MOVWF   INDF
+                      00478 ;       .line   105; "PB.c"     break;
+014F   2???           00479         GOTO    _00158_DS_
+0150                  00480 _00147_DS_:
+                      00481 ;       .line   107; "PB.c"     if((pb_info[current_button].samples[0] == PB_RELEASED_VOLTAGE) &&
+0150   0??? 0???      00482         BANKSEL r0x1014
+0152   08??           00483         MOVF    r0x1014,W
+0153   1283 1303      00484         BANKSEL FSR
+0155   0084           00485         MOVWF   FSR
+0156   1383           00486         BCF     STATUS,7
+0157   0??? 0???      00487         BANKSEL r0x1015
+0159   18??           00488         BTFSC   r0x1015,0
+015A   1783           00489         BSF     STATUS,7
+015B   1283 1303      00490         BANKSEL INDF
+015D   0800           00491         MOVF    INDF,W
+015E   0??? 0???      00492         BANKSEL r0x1018
+0160   00??           00493         MOVWF   r0x1018
+0161   3A01           00494         XORLW   0x01
+0162   1D03           00495         BTFSS   STATUS,2
+0163   2???           00496         GOTO    _00158_DS_
+                      00497 ;       .line   108; "PB.c"     (pb_info[current_button].samples[1] == PB_RELEASED_VOLTAGE))
+0164   3001           00498         MOVLW   0x01
+0165   07??           00499         ADDWF   r0x1014,W
+0166   00??           00500         MOVWF   r0x1018
+0167   01??           00501         CLRF    r0x1019
+0168   0D??           00502         RLF     r0x1019,F
+0169   08??           00503         MOVF    r0x1015,W
+016A   07??           00504         ADDWF   r0x1019,F
+016B   08??           00505         MOVF    r0x1018,W
+016C   1283 1303      00506         BANKSEL FSR
+016E   0084           00507         MOVWF   FSR
+016F   1383           00508         BCF     STATUS,7
+0170   0??? 0???      00509         BANKSEL r0x1019
+0172   18??           00510         BTFSC   r0x1019,0
+0173   1783           00511         BSF     STATUS,7
+0174   1283 1303      00512         BANKSEL INDF
+0176   0800           00513         MOVF    INDF,W
+0177   0??? 0???      00514         BANKSEL r0x101A
+0179   00??           00515         MOVWF   r0x101A
+017A   3A01           00516         XORLW   0x01
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 11
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+017B   1D03           00517         BTFSS   STATUS,2
+017C   2???           00518         GOTO    _00158_DS_
+                      00519 ;       .line   110; "PB.c"     pb_info[current_button].state = PB_PRE_RELEASED;
+017D   08??           00520         MOVF    r0x1016,W
+017E   1283 1303      00521         BANKSEL FSR
+0180   0084           00522         MOVWF   FSR
+0181   1383           00523         BCF     STATUS,7
+0182   0??? 0???      00524         BANKSEL r0x1017
+0184   18??           00525         BTFSC   r0x1017,0
+0185   1783           00526         BSF     STATUS,7
+0186   3003           00527         MOVLW   0x03
+0187   1283 1303      00528         BANKSEL INDF
+0189   0080           00529         MOVWF   INDF
+                      00530 ;       .line   112; "PB.c"     break;
+018A   2???           00531         GOTO    _00158_DS_
+018B                  00532 _00151_DS_:
+                      00533 ;       .line   114; "PB.c"     if(pb_info[current_button].samples[1] == PB_RELEASED_VOLTAGE)
+018B   0??? 0???      00534         BANKSEL r0x1014
+018D   0A??           00535         INCF    r0x1014,F
+018E   1903           00536         BTFSC   STATUS,2
+018F   0A??           00537         INCF    r0x1015,F
+0190   08??           00538         MOVF    r0x1014,W
+0191   1283 1303      00539         BANKSEL FSR
+0193   0084           00540         MOVWF   FSR
+0194   1383           00541         BCF     STATUS,7
+0195   0??? 0???      00542         BANKSEL r0x1015
+0197   18??           00543         BTFSC   r0x1015,0
+0198   1783           00544         BSF     STATUS,7
+0199   1283 1303      00545         BANKSEL INDF
+019B   0800           00546         MOVF    INDF,W
+019C   0??? 0???      00547         BANKSEL r0x1018
+019E   00??           00548         MOVWF   r0x1018
+019F   3A01           00549         XORLW   0x01
+01A0   1D03           00550         BTFSS   STATUS,2
+01A1   2???           00551         GOTO    _00158_DS_
+                      00552 ;       .line   116; "PB.c"     pb_info[current_button].state = PB_RELEASED;
+01A2   08??           00553         MOVF    r0x1016,W
+01A3   1283 1303      00554         BANKSEL FSR
+01A5   0084           00555         MOVWF   FSR
+01A6   1383           00556         BCF     STATUS,7
+01A7   0??? 0???      00557         BANKSEL r0x1017
+01A9   18??           00558         BTFSC   r0x1017,0
+01AA   1783           00559         BSF     STATUS,7
+01AB   3000           00560         MOVLW   0x00
+01AC   1283 1303      00561         BANKSEL INDF
+01AE   0080           00562         MOVWF   INDF
+01AF                  00563 _00158_DS_:
+                      00564 ;       .line   66; "PB.c"      for (current_button = PB_PLUS; current_button < PB_UNUSED_2 ; current_bu
+                            tton++)
+01AF   3003           00565         MOVLW   0x03
+01B0   0??? 0???      00566         BANKSEL r0x1010
+01B2   07??           00567         ADDWF   r0x1010,F
+01B3   1803           00568         BTFSC   STATUS,0
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 12
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+01B4   0A??           00569         INCF    r0x1011,F
+01B5   3003           00570         MOVLW   0x03
+01B6   07??           00571         ADDWF   r0x1012,F
+01B7   1803           00572         BTFSC   STATUS,0
+01B8   0A??           00573         INCF    r0x1013,F
+01B9   0A??           00574         INCF    r0x100F,F
+                      00575 ;;unsigned compare: left < lit(0x3=3), size=1
+01BA   3003           00576         MOVLW   0x03
+01BB   02??           00577         SUBWF   r0x100F,W
+01BC   1C03           00578         BTFSS   STATUS,0
+01BD   2???           00579         GOTO    _00157_DS_
+                      00580 ;;genSkipc:3307: created from rifx:00000000047A57B0
+                      00581 ;       .line   127; "PB.c"     }
+01BE   0008           00582         RETURN  
+                      00583 ; exit point of _PB_Update
+                      00584 
+                      00585 ;***
+                      00586 ;  pBlock Stats: dbName = C
+                      00587 ;***
+                      00588 ;has an exit
+                      00589 ;functions called:
+                      00590 ;   _GPIO_InitPortPin
+                      00591 ;   _GPIO_InitPortPin
+                      00592 ;   _GPIO_InitPortPin
+                      00593 ;   _GPIO_InitPortPin
+                      00594 ;   __muluchar
+                      00595 ;   _GPIO_InitPortPin
+                      00596 ;   _GPIO_InitPortPin
+                      00597 ;   _GPIO_InitPortPin
+                      00598 ;   _GPIO_InitPortPin
+                      00599 ;   __muluchar
+                      00600 ;7 compiler assigned registers:
+                      00601 ;   r0x101B
+                      00602 ;   STK00
+                      00603 ;   r0x101C
+                      00604 ;   STK01
+                      00605 ;   r0x101D
+                      00606 ;   r0x101E
+                      00607 ;   r0x101F
+                      00608 ;; Starting pCode block
+                      00609 S_PB__PB_Init   code
+0000                  00610 _PB_Init:
+                      00611 ; 2 exit points
+                      00612 ;       .line   22; "PB.c"      void PB_Init(tPB pb, tPB_State initial_state)
+0000   0??? 0???      00613         BANKSEL r0x101B
+0002   00??           00614         MOVWF   r0x101B
+0003   08??           00615         MOVF    STK00,W
+0004   00??           00616         MOVWF   r0x101C
+                      00617 ;;swapping arguments (AOP_TYPEs 1/2)
+                      00618 ;;unsigned compare: left >= lit(0x4=4), size=1
+                      00619 ;       .line   25; "PB.c"      switch(pb)
+0005   3004           00620         MOVLW   0x04
+0006   02??           00621         SUBWF   r0x101B,W
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 13
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0007   1803           00622         BTFSC   STATUS,0
+0008   2???           00623         GOTO    _00110_DS_
+                      00624 ;;genSkipc:3307: created from rifx:00000000047A57B0
+0009   30??           00625         MOVLW   HIGH(_00127_DS_)
+000A   1283 1303      00626         BANKSEL PCLATH
+000C   008A           00627         MOVWF   PCLATH
+000D   30??           00628         MOVLW   _00127_DS_
+000E   0??? 0???      00629         BANKSEL r0x101B
+0010   07??           00630         ADDWF   r0x101B,W
+0011   1C03           00631         BTFSS   STATUS,0
+0012   2???           00632         GOTO    _00003_DS_
+0013   1283 1303      00633         BANKSEL PCLATH
+0015   0A8A           00634         INCF    PCLATH,F
+0016                  00635 _00003_DS_:
+0016   0082           00636         MOVWF   PCL
+0017                  00637 _00127_DS_:
+0017   2???           00638         GOTO    _00105_DS_
+0018   2???           00639         GOTO    _00106_DS_
+0019   2???           00640         GOTO    _00107_DS_
+001A   2???           00641         GOTO    _00108_DS_
+001B                  00642 _00105_DS_:
+                      00643 ;       .line   28; "PB.c"      GPIO_InitPortPin(PB_PLUS_PORT, PB_PLUS_PIN, GPIO_IN);
+001B   3001           00644         MOVLW   0x01
+001C   00??           00645         MOVWF   STK01
+001D   3000           00646         MOVLW   0x00
+001E   00??           00647         MOVWF   STK00
+001F   3001           00648         MOVLW   0x01
+0020   0??? 0???      00649         PAGESEL _GPIO_InitPortPin
+0022   2???           00650         CALL    _GPIO_InitPortPin
+0023   0??? 0???      00651         PAGESEL $
+                      00652 ;       .line   29; "PB.c"      break;
+0025   2???           00653         GOTO    _00110_DS_
+0026                  00654 _00106_DS_:
+                      00655 ;       .line   31; "PB.c"      GPIO_InitPortPin(PB_MINUS_PORT, PB_MINUS_PIN, GPIO_IN);
+0026   3001           00656         MOVLW   0x01
+0027   00??           00657         MOVWF   STK01
+0028   3001           00658         MOVLW   0x01
+0029   00??           00659         MOVWF   STK00
+002A   3001           00660         MOVLW   0x01
+002B   0??? 0???      00661         PAGESEL _GPIO_InitPortPin
+002D   2???           00662         CALL    _GPIO_InitPortPin
+002E   0??? 0???      00663         PAGESEL $
+                      00664 ;       .line   32; "PB.c"      break;
+0030   2???           00665         GOTO    _00110_DS_
+0031                  00666 _00107_DS_:
+                      00667 ;       .line   34; "PB.c"      GPIO_InitPortPin(PB_SET_PORT, PB_SET_PIN, GPIO_IN);
+0031   3001           00668         MOVLW   0x01
+0032   00??           00669         MOVWF   STK01
+0033   3002           00670         MOVLW   0x02
+0034   00??           00671         MOVWF   STK00
+0035   3001           00672         MOVLW   0x01
+0036   0??? 0???      00673         PAGESEL _GPIO_InitPortPin
+0038   2???           00674         CALL    _GPIO_InitPortPin
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 14
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0039   0??? 0???      00675         PAGESEL $
+                      00676 ;       .line   35; "PB.c"      break;
+003B   2???           00677         GOTO    _00110_DS_
+003C                  00678 _00108_DS_:
+                      00679 ;       .line   37; "PB.c"      GPIO_InitPortPin(PORT_B, 3, GPIO_IN);
+003C   3001           00680         MOVLW   0x01
+003D   00??           00681         MOVWF   STK01
+003E   3003           00682         MOVLW   0x03
+003F   00??           00683         MOVWF   STK00
+0040   3001           00684         MOVLW   0x01
+0041   0??? 0???      00685         PAGESEL _GPIO_InitPortPin
+0043   2???           00686         CALL    _GPIO_InitPortPin
+0044   0??? 0???      00687         PAGESEL $
+0046                  00688 _00110_DS_:
+                      00689 ;       .line   45; "PB.c"      pb_info[pb].state = initial_state;
+0046   3003           00690         MOVLW   0x03
+0047   00??           00691         MOVWF   STK00
+0048   0??? 0???      00692         BANKSEL r0x101B
+004A   08??           00693         MOVF    r0x101B,W
+004B   0??? 0???      00694         PAGESEL __muluchar
+004D   2???           00695         CALL    __muluchar
+004E   0??? 0???      00696         PAGESEL $
+0050   0??? 0???      00697         BANKSEL r0x101D
+0052   00??           00698         MOVWF   r0x101D
+0053   08??           00699         MOVF    STK00,W
+0054   00??           00700         MOVWF   r0x101B
+0055   3E??           00701         ADDLW   (_pb_info + 0)
+0056   00??           00702         MOVWF   r0x101B
+0057   08??           00703         MOVF    r0x101D,W
+0058   1803           00704         BTFSC   STATUS,0
+0059   0F??           00705         INCFSZ  r0x101D,W
+005A   3E??           00706         ADDLW   high (_pb_info + 0)
+005B   00??           00707         MOVWF   r0x101D
+005C   3002           00708         MOVLW   0x02
+005D   07??           00709         ADDWF   r0x101B,W
+005E   00??           00710         MOVWF   r0x101E
+005F   01??           00711         CLRF    r0x101F
+0060   0D??           00712         RLF     r0x101F,F
+0061   08??           00713         MOVF    r0x101D,W
+0062   07??           00714         ADDWF   r0x101F,F
+0063   08??           00715         MOVF    r0x101E,W
+0064   1283 1303      00716         BANKSEL FSR
+0066   0084           00717         MOVWF   FSR
+0067   1383           00718         BCF     STATUS,7
+0068   0??? 0???      00719         BANKSEL r0x101F
+006A   18??           00720         BTFSC   r0x101F,0
+006B   1783           00721         BSF     STATUS,7
+006C   08??           00722         MOVF    r0x101C,W
+006D   1283 1303      00723         BANKSEL INDF
+006F   0080           00724         MOVWF   INDF
+                      00725 ;;swapping arguments (AOP_TYPEs 1/2)
+                      00726 ;;unsigned compare: left >= lit(0x4=4), size=1
+                      00727 ;       .line   48; "PB.c"      switch (initial_state)
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 15
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0070   3004           00728         MOVLW   0x04
+0071   0??? 0???      00729         BANKSEL r0x101C
+0073   02??           00730         SUBWF   r0x101C,W
+0074   1803           00731         BTFSC   STATUS,0
+0075   2???           00732         GOTO    _00116_DS_
+                      00733 ;;genSkipc:3307: created from rifx:00000000047A57B0
+0076   30??           00734         MOVLW   HIGH(_00129_DS_)
+0077   1283 1303      00735         BANKSEL PCLATH
+0079   008A           00736         MOVWF   PCLATH
+007A   30??           00737         MOVLW   _00129_DS_
+007B   0??? 0???      00738         BANKSEL r0x101C
+007D   07??           00739         ADDWF   r0x101C,W
+007E   1C03           00740         BTFSS   STATUS,0
+007F   2???           00741         GOTO    _00004_DS_
+0080   1283 1303      00742         BANKSEL PCLATH
+0082   0A8A           00743         INCF    PCLATH,F
+0083                  00744 _00004_DS_:
+0083   0082           00745         MOVWF   PCL
+0084                  00746 _00129_DS_:
+0084   2???           00747         GOTO    _00112_DS_
+0085   2???           00748         GOTO    _00114_DS_
+0086   2???           00749         GOTO    _00114_DS_
+0087   2???           00750         GOTO    _00112_DS_
+0088                  00751 _00112_DS_:
+                      00752 ;       .line   52; "PB.c"      pb_info[pb].samples[0] = PB_RELEASED_VOLTAGE;
+0088   0??? 0???      00753         BANKSEL r0x101B
+008A   08??           00754         MOVF    r0x101B,W
+008B   1283 1303      00755         BANKSEL FSR
+008D   0084           00756         MOVWF   FSR
+008E   1383           00757         BCF     STATUS,7
+008F   0??? 0???      00758         BANKSEL r0x101D
+0091   18??           00759         BTFSC   r0x101D,0
+0092   1783           00760         BSF     STATUS,7
+0093   3001           00761         MOVLW   0x01
+0094   1283 1303      00762         BANKSEL INDF
+0096   0080           00763         MOVWF   INDF
+                      00764 ;       .line   53; "PB.c"      pb_info[pb].samples[1] = PB_RELEASED_VOLTAGE;
+0097   3001           00765         MOVLW   0x01
+0098   0??? 0???      00766         BANKSEL r0x101B
+009A   07??           00767         ADDWF   r0x101B,W
+009B   00??           00768         MOVWF   r0x101C
+009C   01??           00769         CLRF    r0x101E
+009D   0D??           00770         RLF     r0x101E,F
+009E   08??           00771         MOVF    r0x101D,W
+009F   07??           00772         ADDWF   r0x101E,F
+00A0   08??           00773         MOVF    r0x101C,W
+00A1   1283 1303      00774         BANKSEL FSR
+00A3   0084           00775         MOVWF   FSR
+00A4   1383           00776         BCF     STATUS,7
+00A5   0??? 0???      00777         BANKSEL r0x101E
+00A7   18??           00778         BTFSC   r0x101E,0
+00A8   1783           00779         BSF     STATUS,7
+00A9   3001           00780         MOVLW   0x01
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 16
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+00AA   1283 1303      00781         BANKSEL INDF
+00AC   0080           00782         MOVWF   INDF
+                      00783 ;       .line   54; "PB.c"      break;
+00AD   2???           00784         GOTO    _00116_DS_
+00AE                  00785 _00114_DS_:
+                      00786 ;       .line   57; "PB.c"      pb_info[pb].samples[0] = PB_PRESSED_VOLTAGE;
+00AE   0??? 0???      00787         BANKSEL r0x101B
+00B0   08??           00788         MOVF    r0x101B,W
+00B1   1283 1303      00789         BANKSEL FSR
+00B3   0084           00790         MOVWF   FSR
+00B4   1383           00791         BCF     STATUS,7
+00B5   0??? 0???      00792         BANKSEL r0x101D
+00B7   18??           00793         BTFSC   r0x101D,0
+00B8   1783           00794         BSF     STATUS,7
+00B9   3000           00795         MOVLW   0x00
+00BA   1283 1303      00796         BANKSEL INDF
+00BC   0080           00797         MOVWF   INDF
+                      00798 ;       .line   58; "PB.c"      pb_info[pb].samples[1] = PB_PRESSED_VOLTAGE;
+00BD   0??? 0???      00799         BANKSEL r0x101B
+00BF   0A??           00800         INCF    r0x101B,F
+00C0   1903           00801         BTFSC   STATUS,2
+00C1   0A??           00802         INCF    r0x101D,F
+00C2   08??           00803         MOVF    r0x101B,W
+00C3   1283 1303      00804         BANKSEL FSR
+00C5   0084           00805         MOVWF   FSR
+00C6   1383           00806         BCF     STATUS,7
+00C7   0??? 0???      00807         BANKSEL r0x101D
+00C9   18??           00808         BTFSC   r0x101D,0
+00CA   1783           00809         BSF     STATUS,7
+00CB   3000           00810         MOVLW   0x00
+00CC   1283 1303      00811         BANKSEL INDF
+00CE   0080           00812         MOVWF   INDF
+00CF                  00813 _00116_DS_:
+                      00814 ;       .line   61; "PB.c"      }
+00CF   0008           00815         RETURN  
+                      00816 ; exit point of _PB_Init
+                      00817 
+                      00818 
+                      00819 ;       code size estimation:
+                      00820 ;         431+  132 =   563 instructions ( 1390 byte)
+                      00821 
+                      00822         end
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+ACKDT                             CONSTANT      00000005              5
+ACKEN                             CONSTANT      00000004              4
+ACKSTAT                           CONSTANT      00000006              6
+ADCON0                            CONSTANT      0000001F             31
+ADCON1                            CONSTANT      0000009F            159
+ADCS0                             CONSTANT      00000006              6
+ADCS1                             CONSTANT      00000007              7
+ADCS2                             CONSTANT      00000006              6
+ADDEN                             CONSTANT      00000003              3
+ADFM                              CONSTANT      00000007              7
+ADIE                              CONSTANT      00000006              6
+ADIF                              CONSTANT      00000006              6
+ADON                              CONSTANT      00000000              0
+ADRESH                            CONSTANT      0000001E             30
+ADRESL                            CONSTANT      0000009E            158
+BCLIE                             CONSTANT      00000003              3
+BCLIF                             CONSTANT      00000003              3
+BF                                CONSTANT      00000000              0
+BRGH                              CONSTANT      00000002              2
+C                                 CONSTANT      00000000              0
+C1INV                             CONSTANT      00000004              4
+C1OUT                             CONSTANT      00000006              6
+C2INV                             CONSTANT      00000005              5
+C2OUT                             CONSTANT      00000007              7
+CCP1CON                           CONSTANT      00000017             23
+CCP1IE                            CONSTANT      00000002              2
+CCP1IF                            CONSTANT      00000002              2
+CCP1M0                            CONSTANT      00000000              0
+CCP1M1                            CONSTANT      00000001              1
+CCP1M2                            CONSTANT      00000002              2
+CCP1M3                            CONSTANT      00000003              3
+CCP1X                             CONSTANT      00000005              5
+CCP1Y                             CONSTANT      00000004              4
+CCP2CON                           CONSTANT      0000001D             29
+CCP2IE                            CONSTANT      00000000              0
+CCP2IF                            CONSTANT      00000000              0
+CCP2M0                            CONSTANT      00000000              0
+CCP2M1                            CONSTANT      00000001              1
+CCP2M2                            CONSTANT      00000002              2
+CCP2M3                            CONSTANT      00000003              3
+CCP2X                             CONSTANT      00000005              5
+CCP2Y                             CONSTANT      00000004              4
+CCPR1                             CONSTANT      00000015             21
+CCPR1H                            CONSTANT      00000016             22
+CCPR1L                            CONSTANT      00000015             21
+CCPR2                             CONSTANT      0000001B             27
+CCPR2H                            CONSTANT      0000001C             28
+CCPR2L                            CONSTANT      0000001B             27
+CHS0                              CONSTANT      00000003              3
+CHS1                              CONSTANT      00000004              4
+CHS2                              CONSTANT      00000005              5
+CIS                               CONSTANT      00000003              3
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 18
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+CKE                               CONSTANT      00000006              6
+CKP                               CONSTANT      00000004              4
+CM0                               CONSTANT      00000000              0
+CM1                               CONSTANT      00000001              1
+CM2                               CONSTANT      00000002              2
+CMCON                             CONSTANT      0000009C            156
+CMIE                              CONSTANT      00000006              6
+CMIF                              CONSTANT      00000006              6
+CREN                              CONSTANT      00000004              4
+CSRC                              CONSTANT      00000007              7
+CVR0                              CONSTANT      00000000              0
+CVR1                              CONSTANT      00000001              1
+CVR2                              CONSTANT      00000002              2
+CVR3                              CONSTANT      00000003              3
+CVRCON                            CONSTANT      0000009D            157
+CVREN                             CONSTANT      00000007              7
+CVROE                             CONSTANT      00000006              6
+CVRR                              CONSTANT      00000005              5
+D                                 CONSTANT      00000005              5
+DATA_ADDRESS                      CONSTANT      00000005              5
+DC                                CONSTANT      00000001              1
+D_A                               CONSTANT      00000005              5
+D_NOT_A                           CONSTANT      00000005              5
+EEADR                             CONSTANT      0000010D            269
+EEADRH                            CONSTANT      0000010F            271
+EECON1                            CONSTANT      0000018C            396
+EECON2                            CONSTANT      0000018D            397
+EEDATA                            CONSTANT      0000010C            268
+EEDATH                            CONSTANT      0000010E            270
+EEIE                              CONSTANT      00000004              4
+EEIF                              CONSTANT      00000004              4
+EEPGD                             CONSTANT      00000007              7
+F                                 CONSTANT      00000001              1
+FERR                              CONSTANT      00000002              2
+FSR                               CONSTANT      00000004              4
+GCEN                              CONSTANT      00000007              7
+GIE                               CONSTANT      00000007              7
+GO                                CONSTANT      00000002              2
+GO_DONE                           CONSTANT      00000002              2
+GO_NOT_DONE                       CONSTANT      00000002              2
+I2C_DATA                          CONSTANT      00000005              5
+I2C_READ                          CONSTANT      00000002              2
+I2C_START                         CONSTANT      00000003              3
+I2C_STOP                          CONSTANT      00000004              4
+IBF                               CONSTANT      00000007              7
+IBOV                              CONSTANT      00000005              5
+INDF                              CONSTANT      00000000              0
+INTCON                            CONSTANT      0000000B             11
+INTE                              CONSTANT      00000004              4
+INTEDG                            CONSTANT      00000006              6
+INTF                              CONSTANT      00000001              1
+IRP                               CONSTANT      00000007              7
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+NOT_A                             CONSTANT      00000005              5
+NOT_ADDRESS                       CONSTANT      00000005              5
+NOT_BO                            CONSTANT      00000000              0
+NOT_BOR                           CONSTANT      00000000              0
+NOT_DONE                          CONSTANT      00000002              2
+NOT_PD                            CONSTANT      00000003              3
+NOT_POR                           CONSTANT      00000001              1
+NOT_RBPU                          CONSTANT      00000007              7
+NOT_RC8                           CONSTANT      00000006              6
+NOT_T1SYNC                        CONSTANT      00000002              2
+NOT_TO                            CONSTANT      00000004              4
+NOT_TX8                           CONSTANT      00000006              6
+NOT_W                             CONSTANT      00000002              2
+NOT_WRITE                         CONSTANT      00000002              2
+OBF                               CONSTANT      00000006              6
+OERR                              CONSTANT      00000001              1
+OPTION_REG                        CONSTANT      00000081            129
+P                                 CONSTANT      00000004              4
+PCFG0                             CONSTANT      00000000              0
+PCFG1                             CONSTANT      00000001              1
+PCFG2                             CONSTANT      00000002              2
+PCFG3                             CONSTANT      00000003              3
+PCL                               CONSTANT      00000002              2
+PCLATH                            CONSTANT      0000000A             10
+PCON                              CONSTANT      0000008E            142
+PEIE                              CONSTANT      00000006              6
+PEN                               CONSTANT      00000002              2
+PIE1                              CONSTANT      0000008C            140
+PIE2                              CONSTANT      0000008D            141
+PIR1                              CONSTANT      0000000C             12
+PIR2                              CONSTANT      0000000D             13
+PORTA                             CONSTANT      00000005              5
+PORTB                             CONSTANT      00000006              6
+PORTC                             CONSTANT      00000007              7
+PORTD                             CONSTANT      00000008              8
+PORTE                             CONSTANT      00000009              9
+PR2                               CONSTANT      00000092            146
+PS0                               CONSTANT      00000000              0
+PS1                               CONSTANT      00000001              1
+PS2                               CONSTANT      00000002              2
+PSA                               CONSTANT      00000003              3
+PSAVE                             EXTERNAL      00000000              0
+PSPIE                             CONSTANT      00000007              7
+PSPIF                             CONSTANT      00000007              7
+PSPMODE                           CONSTANT      00000004              4
+R                                 CONSTANT      00000002              2
+RA0                               CONSTANT      00000000              0
+RA1                               CONSTANT      00000001              1
+RA2                               CONSTANT      00000002              2
+RA3                               CONSTANT      00000003              3
+RA4                               CONSTANT      00000004              4
+RA5                               CONSTANT      00000005              5
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 20
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+RB0                               CONSTANT      00000000              0
+RB1                               CONSTANT      00000001              1
+RB2                               CONSTANT      00000002              2
+RB3                               CONSTANT      00000003              3
+RB4                               CONSTANT      00000004              4
+RB5                               CONSTANT      00000005              5
+RB6                               CONSTANT      00000006              6
+RB7                               CONSTANT      00000007              7
+RBIE                              CONSTANT      00000003              3
+RBIF                              CONSTANT      00000000              0
+RC0                               CONSTANT      00000000              0
+RC1                               CONSTANT      00000001              1
+RC2                               CONSTANT      00000002              2
+RC3                               CONSTANT      00000003              3
+RC4                               CONSTANT      00000004              4
+RC5                               CONSTANT      00000005              5
+RC6                               CONSTANT      00000006              6
+RC7                               CONSTANT      00000007              7
+RC8_9                             CONSTANT      00000006              6
+RC9                               CONSTANT      00000006              6
+RCD8                              CONSTANT      00000000              0
+RCEN                              CONSTANT      00000003              3
+RCIE                              CONSTANT      00000005              5
+RCIF                              CONSTANT      00000005              5
+RCREG                             CONSTANT      0000001A             26
+RCSTA                             CONSTANT      00000018             24
+RD                                CONSTANT      00000000              0
+RD0                               CONSTANT      00000000              0
+RD1                               CONSTANT      00000001              1
+RD2                               CONSTANT      00000002              2
+RD3                               CONSTANT      00000003              3
+RD4                               CONSTANT      00000004              4
+RD5                               CONSTANT      00000005              5
+RD6                               CONSTANT      00000006              6
+RD7                               CONSTANT      00000007              7
+RE0                               CONSTANT      00000000              0
+RE1                               CONSTANT      00000001              1
+RE2                               CONSTANT      00000002              2
+READ_WRITE                        CONSTANT      00000002              2
+RP0                               CONSTANT      00000005              5
+RP1                               CONSTANT      00000006              6
+RSEN                              CONSTANT      00000001              1
+RX9                               CONSTANT      00000006              6
+RX9D                              CONSTANT      00000000              0
+R_NOT_W                           CONSTANT      00000002              2
+R_W                               CONSTANT      00000002              2
+S                                 CONSTANT      00000003              3
+SEN                               CONSTANT      00000000              0
+SMP                               CONSTANT      00000007              7
+SPBRG                             CONSTANT      00000099            153
+SPEN                              CONSTANT      00000007              7
+SREN                              CONSTANT      00000005              5
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+SSAVE                             EXTERNAL      00000000              0
+SSPADD                            CONSTANT      00000093            147
+SSPBUF                            CONSTANT      00000013             19
+SSPCON                            CONSTANT      00000014             20
+SSPCON2                           CONSTANT      00000091            145
+SSPEN                             CONSTANT      00000005              5
+SSPIE                             CONSTANT      00000003              3
+SSPIF                             CONSTANT      00000003              3
+SSPM0                             CONSTANT      00000000              0
+SSPM1                             CONSTANT      00000001              1
+SSPM2                             CONSTANT      00000002              2
+SSPM3                             CONSTANT      00000003              3
+SSPOV                             CONSTANT      00000006              6
+SSPSTAT                           CONSTANT      00000094            148
+STATUS                            CONSTANT      00000003              3
+STK00                             EXTERNAL      00000000              0
+STK01                             EXTERNAL      00000000              0
+STK02                             EXTERNAL      00000000              0
+STK03                             EXTERNAL      00000000              0
+STK04                             EXTERNAL      00000000              0
+STK05                             EXTERNAL      00000000              0
+STK06                             EXTERNAL      00000000              0
+STK07                             EXTERNAL      00000000              0
+STK08                             EXTERNAL      00000000              0
+STK09                             EXTERNAL      00000000              0
+STK10                             EXTERNAL      00000000              0
+STK11                             EXTERNAL      00000000              0
+STK12                             EXTERNAL      00000000              0
+SYNC                              CONSTANT      00000004              4
+T0CS                              CONSTANT      00000005              5
+T0IE                              CONSTANT      00000005              5
+T0IF                              CONSTANT      00000002              2
+T0SE                              CONSTANT      00000004              4
+T1CKPS0                           CONSTANT      00000004              4
+T1CKPS1                           CONSTANT      00000005              5
+T1CON                             CONSTANT      00000010             16
+T1INSYNC                          CONSTANT      00000002              2
+T1OSCEN                           CONSTANT      00000003              3
+T1SYNC                            CONSTANT      00000002              2
+T2CKPS0                           CONSTANT      00000000              0
+T2CKPS1                           CONSTANT      00000001              1
+T2CON                             CONSTANT      00000012             18
+TMR0                              CONSTANT      00000001              1
+TMR0IE                            CONSTANT      00000005              5
+TMR0IF                            CONSTANT      00000002              2
+TMR1                              CONSTANT      0000000E             14
+TMR1CS                            CONSTANT      00000001              1
+TMR1H                             CONSTANT      0000000F             15
+TMR1IE                            CONSTANT      00000000              0
+TMR1IF                            CONSTANT      00000000              0
+TMR1L                             CONSTANT      0000000E             14
+TMR1ON                            CONSTANT      00000000              0
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+TMR2                              CONSTANT      00000011             17
+TMR2IE                            CONSTANT      00000001              1
+TMR2IF                            CONSTANT      00000001              1
+TMR2ON                            CONSTANT      00000002              2
+TOUTPS0                           CONSTANT      00000003              3
+TOUTPS1                           CONSTANT      00000004              4
+TOUTPS2                           CONSTANT      00000005              5
+TOUTPS3                           CONSTANT      00000006              6
+TRISA                             CONSTANT      00000085            133
+TRISA0                            CONSTANT      00000000              0
+TRISA1                            CONSTANT      00000001              1
+TRISA2                            CONSTANT      00000002              2
+TRISA3                            CONSTANT      00000003              3
+TRISA4                            CONSTANT      00000004              4
+TRISA5                            CONSTANT      00000005              5
+TRISB                             CONSTANT      00000086            134
+TRISB0                            CONSTANT      00000000              0
+TRISB1                            CONSTANT      00000001              1
+TRISB2                            CONSTANT      00000002              2
+TRISB3                            CONSTANT      00000003              3
+TRISB4                            CONSTANT      00000004              4
+TRISB5                            CONSTANT      00000005              5
+TRISB6                            CONSTANT      00000006              6
+TRISB7                            CONSTANT      00000007              7
+TRISC                             CONSTANT      00000087            135
+TRISC0                            CONSTANT      00000000              0
+TRISC1                            CONSTANT      00000001              1
+TRISC2                            CONSTANT      00000002              2
+TRISC3                            CONSTANT      00000003              3
+TRISC4                            CONSTANT      00000004              4
+TRISC5                            CONSTANT      00000005              5
+TRISC6                            CONSTANT      00000006              6
+TRISC7                            CONSTANT      00000007              7
+TRISD                             CONSTANT      00000088            136
+TRISD0                            CONSTANT      00000000              0
+TRISD1                            CONSTANT      00000001              1
+TRISD2                            CONSTANT      00000002              2
+TRISD3                            CONSTANT      00000003              3
+TRISD4                            CONSTANT      00000004              4
+TRISD5                            CONSTANT      00000005              5
+TRISD6                            CONSTANT      00000006              6
+TRISD7                            CONSTANT      00000007              7
+TRISE                             CONSTANT      00000089            137
+TRISE0                            CONSTANT      00000000              0
+TRISE1                            CONSTANT      00000001              1
+TRISE2                            CONSTANT      00000002              2
+TRMT                              CONSTANT      00000001              1
+TX8_9                             CONSTANT      00000006              6
+TX9                               CONSTANT      00000006              6
+TX9D                              CONSTANT      00000000              0
+TXD8                              CONSTANT      00000000              0
+TXEN                              CONSTANT      00000005              5
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+TXIE                              CONSTANT      00000004              4
+TXIF                              CONSTANT      00000004              4
+TXREG                             CONSTANT      00000019             25
+TXSTA                             CONSTANT      00000098            152
+UA                                CONSTANT      00000001              1
+W                                 CONSTANT      00000000              0
+WCOL                              CONSTANT      00000007              7
+WR                                CONSTANT      00000001              1
+WREN                              CONSTANT      00000002              2
+WRERR                             CONSTANT      00000003              3
+WSAVE                             EXTERNAL      00000000              0
+Z                                 CONSTANT      00000002              2
+_00001_DS_                        ADDRESS       0000004D             77
+_00002_DS_                        ADDRESS       000000E7            231
+_00003_DS_                        ADDRESS       00000016             22
+_00004_DS_                        ADDRESS       00000083            131
+_00105_DS_                        ADDRESS       0000001B             27
+_00106_DS_                        ADDRESS       00000026             38
+_00107_DS_                        ADDRESS       00000031             49
+_00108_DS_                        ADDRESS       0000003C             60
+_00110_DS_                        ADDRESS       00000046             70
+_00112_DS_                        ADDRESS       00000088            136
+_00114_DS_                        ADDRESS       000000AE            174
+_00116_DS_                        ADDRESS       000000CF            207
+_00127_DS_                        ADDRESS       00000017             23
+_00129_DS_                        ADDRESS       00000084            132
+_00134_DS_                        ADDRESS       00000052             82
+_00135_DS_                        ADDRESS       0000006B            107
+_00136_DS_                        ADDRESS       00000084            132
+_00137_DS_                        ADDRESS       0000009D            157
+_00139_DS_                        ADDRESS       000000B5            181
+_00140_DS_                        ADDRESS       000000EC            236
+_00144_DS_                        ADDRESS       00000127            295
+_00147_DS_                        ADDRESS       00000150            336
+_00151_DS_                        ADDRESS       0000018B            395
+_00157_DS_                        ADDRESS       00000007              7
+_00158_DS_                        ADDRESS       000001AF            431
+_00199_DS_                        ADDRESS       0000004E             78
+_00201_DS_                        ADDRESS       000000E8            232
+_BODEN_OFF                        CONSTANT      00003FBF          16319
+_BODEN_ON                         CONSTANT      00003FFF          16383
+_BOREN_OFF                        CONSTANT      00003FBF          16319
+_BOREN_ON                         CONSTANT      00003FFF          16383
+_CONFIG                           CONSTANT      00002007           8199
+_CPD_OFF                          CONSTANT      00003FFF          16383
+_CPD_ON                           CONSTANT      00003EFF          16127
+_CP_ALL                           CONSTANT      00001FFF           8191
+_CP_OFF                           CONSTANT      00003FFF          16383
+_CP_ON                            CONSTANT      00001FFF           8191
+_DEBUG_OFF                        CONSTANT      00003FFF          16383
+_DEBUG_ON                         CONSTANT      000037FF          14335
+_DEVID1                           CONSTANT      00002006           8198
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+_FOSC_EXTRC                       CONSTANT      00003FFF          16383
+_FOSC_HS                          CONSTANT      00003FFE          16382
+_FOSC_LP                          CONSTANT      00003FFC          16380
+_FOSC_XT                          CONSTANT      00003FFD          16381
+_GPIO_GetPortPinState             EXTERNAL      00000000              0
+_GPIO_InitPortPin                 EXTERNAL      00000000              0
+_HS_OSC                           CONSTANT      00003FFE          16382
+_IDLOC0                           CONSTANT      00002000           8192
+_IDLOC1                           CONSTANT      00002001           8193
+_IDLOC2                           CONSTANT      00002002           8194
+_IDLOC3                           CONSTANT      00002003           8195
+_LP_OSC                           CONSTANT      00003FFC          16380
+_LVP_OFF                          CONSTANT      00003F7F          16255
+_LVP_ON                           CONSTANT      00003FFF          16383
+_PB_GetState                      GLOBAL        00000000              0
+_PB_Init                          GLOBAL        00000000              0
+_PB_Update                        GLOBAL        00000000              0
+_PWRTE_OFF                        CONSTANT      00003FFF          16383
+_PWRTE_ON                         CONSTANT      00003FF7          16375
+_RC_OSC                           CONSTANT      00003FFF          16383
+_S_PB__PB_GetState_0009           ADDRESS       00000009              9
+_S_PB__PB_Init_0023               ADDRESS       00000023             35
+_S_PB__PB_Init_002E               ADDRESS       0000002E             46
+_S_PB__PB_Init_0039               ADDRESS       00000039             57
+_S_PB__PB_Init_0044               ADDRESS       00000044             68
+_S_PB__PB_Init_004E               ADDRESS       0000004E             78
+_S_PB__PB_Update_0058             ADDRESS       00000058             88
+_S_PB__PB_Update_0071             ADDRESS       00000071            113
+_S_PB__PB_Update_008A             ADDRESS       0000008A            138
+_S_PB__PB_Update_00A3             ADDRESS       000000A3            163
+_WDTE_OFF                         CONSTANT      00003FFB          16379
+_WDTE_ON                          CONSTANT      00003FFF          16383
+_WDT_OFF                          CONSTANT      00003FFB          16379
+_WDT_ON                           CONSTANT      00003FFF          16383
+_WRT_1FOURTH                      CONSTANT      00003BFF          15359
+_WRT_256                          CONSTANT      00003DFF          15871
+_WRT_HALF                         CONSTANT      000039FF          14847
+_WRT_OFF                          CONSTANT      00003FFF          16383
+_XT_OSC                           CONSTANT      00003FFD          16381
+__14_BIT                          CONSTANT      00000001              1
+__16F877A                         CONSTANT      00000001              1
+__ACTIVE_BANK_ADDR                VARIABLE      FFFFFFFF             -1
+__ACTIVE_PAGE_ADDR                VARIABLE      FFFFFFFF             -1
+__ASSUMED_BANK_ADDR               VARIABLE      FFFFFFFF             -1
+__BANK_0                          CONSTANT      00000000              0
+__BANK_1                          CONSTANT      00000080            128
+__BANK_2                          CONSTANT      00000100            256
+__BANK_3                          CONSTANT      00000180            384
+__BANK_BITS                       CONSTANT      00000180            384
+__BANK_FIRST                      CONSTANT      00000000              0
+__BANK_INV                        CONSTANT      FFFFFFFF             -1
+__BANK_LAST                       CONSTANT      00000180            384
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+__BANK_MASK                       CONSTANT      0000007F            127
+__BANK_SHIFT                      CONSTANT      00000007              7
+__BANK_SIZE                       CONSTANT      00000080            128
+__CODE_END                        CONSTANT      00001FFF           8191
+__CODE_START                      CONSTANT      00000000              0
+__COMMON_RAM_END                  CONSTANT      0000007F            127
+__COMMON_RAM_START                CONSTANT      00000070            112
+__CONFIG_END                      CONSTANT      00002007           8199
+__CONFIG_START                    CONSTANT      00002007           8199
+__EEPROM_END                      CONSTANT      000021FF           8703
+__EEPROM_START                    CONSTANT      00002100           8448
+__GPUTILS_SVN_VERSION             CONSTANT      00000505           1285
+__GPUTILS_VERSION_MAJOR           CONSTANT      00000001              1
+__GPUTILS_VERSION_MICRO           CONSTANT      00000000              0
+__GPUTILS_VERSION_MINOR           CONSTANT      00000005              5
+__IDLOCS_END                      CONSTANT      00002003           8195
+__IDLOCS_START                    CONSTANT      00002000           8192
+__NUM_BANKS                       CONSTANT      00000004              4
+__NUM_PAGES                       CONSTANT      00000004              4
+__PAGE_0                          CONSTANT      00000000              0
+__PAGE_1                          CONSTANT      00000800           2048
+__PAGE_2                          CONSTANT      00001000           4096
+__PAGE_3                          CONSTANT      00001800           6144
+__PAGE_BITS                       CONSTANT      00001800           6144
+__PAGE_FIRST                      CONSTANT      00000000              0
+__PAGE_INV                        CONSTANT      FFFFFFFF             -1
+__PAGE_LAST                       CONSTANT      00001800           6144
+__PAGE_MASK                       CONSTANT      000007FF           2047
+__PAGE_SHIFT                      CONSTANT      0000000B             11
+__PAGE_SIZE                       CONSTANT      00000800           2048
+__VECTOR_INT                      CONSTANT      00000004              4
+__VECTOR_RESET                    CONSTANT      00000000              0
+__WHILE_LOOP_COUNT_MAX            CONSTANT      000000FF            255
+__muluchar                        EXTERNAL      00000000              0
+_pb_info                          STATIC        00000000              0
+r0x100C                           STATIC        00000011             17
+r0x100D                           STATIC        00000012             18
+r0x100F                           STATIC        00000005              5
+r0x101A                           STATIC        00000010             16
+r0x101B                           STATIC        00000000              0
+r0x101C                           STATIC        00000001              1
+r0x101D                           STATIC        00000002              2
+r0x101E                           STATIC        00000003              3
+r0x101F                           STATIC        00000004              4
+r0x1010                           STATIC        00000006              6
+r0x1011                           STATIC        00000007              7
+r0x1012                           STATIC        00000008              8
+r0x1013                           STATIC        00000009              9
+r0x1014                           STATIC        0000000A             10
+r0x1015                           STATIC        0000000B             11
+r0x1016                           STATIC        0000000C             12
+r0x1017                           STATIC        0000000D             13
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\P   8-6-2020  15:31:05          PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+r0x1018                           STATIC        0000000E             14
+r0x1019                           STATIC        0000000F             15
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

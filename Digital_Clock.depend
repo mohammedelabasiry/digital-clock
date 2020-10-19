@@ -1,0 +1,30 @@
+# depslib dependency file v1.0
+1596040244 source:d:\embedded amr_ali\digital clock\digital_clock\dig_clk_modes.c
+	"DIG_CLK_modes.h"
+	"PB.h"
+
+1595937795 d:\embedded amr_ali\digital clock\digital_clock\dig_clk_modes.h
+
+1595937796 source:d:\embedded amr_ali\digital clock\digital_clock\gpio.c
+	"gpio.h"
+	<pic16f877a.h>
+
+1595937926 d:\embedded amr_ali\digital clock\digital_clock\gpio.h
+	"gpio.h"
+	"main.h"
+
+1595938080 d:\embedded amr_ali\digital clock\digital_clock\main.h
+	"pic16f877a.h"
+
+1596040316 source:d:\embedded amr_ali\digital clock\digital_clock\hours.c
+	"hours.h"
+	"DIG_CLK_modes.h"
+	"PB.h"
+	"SSD.h"
+
+1595937796 d:\embedded amr_ali\digital clock\digital_clock\hours.h
+
+1596040226 d:\embedded amr_ali\digital clock\digital_clock\pb.h
+
+1595937796 d:\embedded amr_ali\digital clock\digital_clock\ssd.h
+

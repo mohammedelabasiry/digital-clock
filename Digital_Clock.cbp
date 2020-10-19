@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Digital_Clock" />
+		<Option pch_mode="2" />
+		<Option compiler="sdcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="bin/Release/Digital_Clock" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="sdcc" />
+				<Compiler>
+					<Add option="--opt-code-size" />
+				</Compiler>
+			</Target>
+		</Build>
+		<Unit filename="DIG_CLK_modes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="DIG_CLK_modes.h" />
+		<Unit filename="PB.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="PB.h" />
+		<Unit filename="SSD.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="SSD.h" />
+		<Unit filename="gpio.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gpio.h" />
+		<Unit filename="hours.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="hours.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="main.h" />
+		<Unit filename="minutes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="minutes.h" />
+		<Unit filename="port.h" />
+		<Unit filename="timer0.h" />
+		<Unit filename="timr0.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

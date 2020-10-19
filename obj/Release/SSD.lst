@@ -1,0 +1,1731 @@
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  1
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00001 ;--------------------------------------------------------
+                      00002 ; File Created by SDCC : free open source ANSI-C Compiler
+                      00003 ; Version 4.0.0 #11528 (MINGW64)
+                      00004 ;--------------------------------------------------------
+                      00005 ; PIC port for the 14-bit core
+                      00006 ;--------------------------------------------------------
+                      00007 ;       .file   "SSD.c"
+                      00008         list    p=16f877a
+                      00009         radix dec
+                      00010         include "p16f877a.inc"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Oct 21 2015
+                      00005 ;  MPASM PIC16F877A processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2015 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00567         LIST
+                      00011 ;--------------------------------------------------------
+                      00012 ; external declarations
+                      00013 ;--------------------------------------------------------
+  0000                00014         extern  _GPIO_GetPortPinState
+  0000                00015         extern  _GPIO_SetPortState
+  0000                00016         extern  _GPIO_SetPortPinState
+  0000                00017         extern  _GPIO_InitPort
+  0000                00018         extern  _GPIO_InitPortPin
+                      00019 
+  0000                00020         extern PSAVE
+  0000                00021         extern SSAVE
+  0000                00022         extern WSAVE
+  0000                00023         extern STK12
+  0000                00024         extern STK11
+  0000                00025         extern STK10
+  0000                00026         extern STK09
+  0000                00027         extern STK08
+  0000                00028         extern STK07
+  0000                00029         extern STK06
+  0000                00030         extern STK05
+  0000                00031         extern STK04
+  0000                00032         extern STK03
+  0000                00033         extern STK02
+  0000                00034         extern STK01
+  0000                00035         extern STK00
+                      00036 ;--------------------------------------------------------
+                      00037 ; global declarations
+                      00038 ;--------------------------------------------------------
+  0000                00039         global  _ssd_symbols
+  0000                00040         global  _SSD_Init
+  0000                00041         global  _SSD_Update
+  0000                00042         global  _SSD_Update_2
+  0000                00043         global  _SSD_SetSymbol
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  2
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+  0000                00044         global  _SSD_SetState
+  0000                00045         global  _SSD_GetSymbol
+  0000                00046         global  _SSD_GetState
+                      00047 
+                      00048 ;--------------------------------------------------------
+                      00049 ; global definitions
+                      00050 ;--------------------------------------------------------
+                      00051 ;--------------------------------------------------------
+                      00052 ; absolute symbol definitions
+                      00053 ;--------------------------------------------------------
+                      00054 ;--------------------------------------------------------
+                      00055 ; compiler-defined variables
+                      00056 ;--------------------------------------------------------
+                      00057 UDL_SSD_0       udata
+0000                  00058 r0x1024 res     1
+0001                  00059 r0x1025 res     1
+0002                  00060 r0x1026 res     1
+0003                  00061 r0x1027 res     1
+0004                  00062 r0x1028 res     1
+0005                  00063 r0x1021 res     1
+0006                  00064 r0x1022 res     1
+0007                  00065 r0x1023 res     1
+0008                  00066 r0x101D res     1
+0009                  00067 r0x101E res     1
+000A                  00068 r0x101F res     1
+000B                  00069 r0x1020 res     1
+000C                  00070 r0x101A res     1
+000D                  00071 r0x101B res     1
+000E                  00072 r0x101C res     1
+000F                  00073 r0x1018 res     1
+0010                  00074 r0x1019 res     1
+0011                  00075 r0x1015 res     1
+0012                  00076 r0x1016 res     1
+0013                  00077 r0x1013 res     1
+0014                  00078 r0x1014 res     1
+                      00079 ;--------------------------------------------------------
+                      00080 ; initialized data
+                      00081 ;--------------------------------------------------------
+                      00082 
+                      00083 IDD_SSD_0       idata
+0000                  00084 _toggle_dot_time
+0000   00             00085         db      0x00    ; 0
+                      00086 
+                      00087 
+                      00088 IDD_SSD_1       idata
+0000                  00089 _dot_state
+0000   00             00090         db      0x00    ; 0
+                      00091 
+                      00092 
+                      00093 IDD_SSD_2       idata
+0000                  00094 _ssd_symbols
+0000   0A             00095         db      0x0a    ; 10
+0001   00 00 00       00096         db      0x00, 0x00, 0x00
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  3
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00097 
+                      00098 
+                      00099 IDD_SSD_3       idata
+0000                  00100 _ssd_data
+0000   3F             00101         db      0x3f    ; 63
+0001   06             00102         db      0x06    ; 6
+0002   5B             00103         db      0x5b    ; 91
+0003   4F             00104         db      0x4f    ; 79    'O'
+0004   66             00105         db      0x66    ; 102   'f'
+0005   6D             00106         db      0x6d    ; 109   'm'
+0006   7D             00107         db      0x7d    ; 125
+0007   07             00108         db      0x07    ; 7
+0008   7F             00109         db      0x7f    ; 127
+0009   6F             00110         db      0x6f    ; 111   'o'
+000A   00             00111         db      0x00    ; 0
+                      00112 
+                      00113 
+                      00114 IDD_SSD_4       idata
+0000                  00115 _SSD_Update_current_ssd_65536_22
+0000   00             00116         db      0x00    ; 0
+                      00117 
+                      00118 
+                      00119 IDD_SSD_5       idata
+0000                  00120 _SSD_Update_2_current_ssd_65536_26
+0000   00             00121         db      0x00    ; 0
+                      00122 
+                      00123 ;--------------------------------------------------------
+                      00124 ; initialized absolute data
+                      00125 ;--------------------------------------------------------
+                      00126 ;--------------------------------------------------------
+                      00127 ; overlayable items in internal ram 
+                      00128 ;--------------------------------------------------------
+                      00129 ;       udata_ovr
+                      00130 ;--------------------------------------------------------
+                      00131 ; code
+                      00132 ;--------------------------------------------------------
+                      00133 code_SSD        code
+                      00134 ;***
+                      00135 ;  pBlock Stats: dbName = C
+                      00136 ;***
+                      00137 ;has an exit
+                      00138 ;functions called:
+                      00139 ;   _GPIO_GetPortPinState
+                      00140 ;   _GPIO_GetPortPinState
+                      00141 ;   _GPIO_GetPortPinState
+                      00142 ;   _GPIO_GetPortPinState
+                      00143 ;   _GPIO_GetPortPinState
+                      00144 ;   _GPIO_GetPortPinState
+                      00145 ;   _GPIO_GetPortPinState
+                      00146 ;   _GPIO_GetPortPinState
+                      00147 ;3 compiler assigned registers:
+                      00148 ;   r0x1013
+                      00149 ;   r0x1014
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  4
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00150 ;   STK00
+                      00151 ;; Starting pCode block
+                      00152 S_SSD__SSD_GetState     code
+0000                  00153 _SSD_GetState:
+                      00154 ; 2 exit points
+                      00155 ;       .line   201; "SSD.c"    tSSD_State SSD_GetState(tSSD ssd)
+0000   0??? 0???      00156         BANKSEL r0x1013
+0002   00??           00157         MOVWF   r0x1013
+                      00158 ;       .line   203; "SSD.c"    tSSD_State ret = SSD_OFF;
+0003   01??           00159         CLRF    r0x1014
+                      00160 ;;swapping arguments (AOP_TYPEs 1/2)
+                      00161 ;;unsigned compare: left >= lit(0x4=4), size=1
+                      00162 ;       .line   205; "SSD.c"    switch(ssd)
+0004   3004           00163         MOVLW   0x04
+0005   02??           00164         SUBWF   r0x1013,W
+0006   1803           00165         BTFSC   STATUS,0
+0007   2???           00166         GOTO    _00186_DS_
+                      00167 ;;genSkipc:3307: created from rifx:00000000047A57B0
+0008   30??           00168         MOVLW   HIGH(_00194_DS_)
+0009   1283 1303      00169         BANKSEL PCLATH
+000B   008A           00170         MOVWF   PCLATH
+000C   30??           00171         MOVLW   _00194_DS_
+000D   0??? 0???      00172         BANKSEL r0x1013
+000F   07??           00173         ADDWF   r0x1013,W
+0010   1C03           00174         BTFSS   STATUS,0
+0011   2???           00175         GOTO    _00001_DS_
+0012   1283 1303      00176         BANKSEL PCLATH
+0014   0A8A           00177         INCF    PCLATH,F
+0015                  00178 _00001_DS_:
+0015   0082           00179         MOVWF   PCL
+0016                  00180 _00194_DS_:
+0016   2???           00181         GOTO    _00181_DS_
+0017   2???           00182         GOTO    _00182_DS_
+0018   2???           00183         GOTO    _00183_DS_
+0019   2???           00184         GOTO    _00184_DS_
+001A                  00185 _00181_DS_:
+                      00186 ;       .line   208; "SSD.c"    ret = GPIO_GetPortPinState(SSD_L_PORT , SSD_L_PIN);
+001A   3002           00187         MOVLW   0x02
+001B   00??           00188         MOVWF   STK00
+001C   3000           00189         MOVLW   0x00
+001D   0??? 0???      00190         PAGESEL _GPIO_GetPortPinState
+001F   2???           00191         CALL    _GPIO_GetPortPinState
+0020   0??? 0???      00192         PAGESEL $
+0022   0??? 0???      00193         BANKSEL r0x1014
+0024   00??           00194         MOVWF   r0x1014
+                      00195 ;       .line   209; "SSD.c"    break;
+0025   2???           00196         GOTO    _00186_DS_
+0026                  00197 _00182_DS_:
+                      00198 ;       .line   211; "SSD.c"    ret = GPIO_GetPortPinState(SSD_ML_PORT , SSD_ML_PIN);
+0026   3003           00199         MOVLW   0x03
+0027   00??           00200         MOVWF   STK00
+0028   3000           00201         MOVLW   0x00
+0029   0??? 0???      00202         PAGESEL _GPIO_GetPortPinState
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  5
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+002B   2???           00203         CALL    _GPIO_GetPortPinState
+002C   0??? 0???      00204         PAGESEL $
+002E   0??? 0???      00205         BANKSEL r0x1014
+0030   00??           00206         MOVWF   r0x1014
+                      00207 ;       .line   212; "SSD.c"    break;
+0031   2???           00208         GOTO    _00186_DS_
+0032                  00209 _00183_DS_:
+                      00210 ;       .line   214; "SSD.c"    ret = GPIO_GetPortPinState(SSD_MR_PORT , SSD_MR_PIN);
+0032   3004           00211         MOVLW   0x04
+0033   00??           00212         MOVWF   STK00
+0034   3000           00213         MOVLW   0x00
+0035   0??? 0???      00214         PAGESEL _GPIO_GetPortPinState
+0037   2???           00215         CALL    _GPIO_GetPortPinState
+0038   0??? 0???      00216         PAGESEL $
+003A   0??? 0???      00217         BANKSEL r0x1014
+003C   00??           00218         MOVWF   r0x1014
+                      00219 ;       .line   215; "SSD.c"    break;
+003D   2???           00220         GOTO    _00186_DS_
+003E                  00221 _00184_DS_:
+                      00222 ;       .line   217; "SSD.c"    ret = GPIO_GetPortPinState(SSD_R_PORT , SSD_R_PIN);
+003E   3005           00223         MOVLW   0x05
+003F   00??           00224         MOVWF   STK00
+0040   3000           00225         MOVLW   0x00
+0041   0??? 0???      00226         PAGESEL _GPIO_GetPortPinState
+0043   2???           00227         CALL    _GPIO_GetPortPinState
+0044   0??? 0???      00228         PAGESEL $
+0046   0??? 0???      00229         BANKSEL r0x1014
+0048   00??           00230         MOVWF   r0x1014
+0049                  00231 _00186_DS_:
+                      00232 ;       .line   224; "SSD.c"    return ret;
+0049   0??? 0???      00233         BANKSEL r0x1014
+004B   08??           00234         MOVF    r0x1014,W
+                      00235 ;       .line   225; "SSD.c"    }
+004C   0008           00236         RETURN  
+                      00237 ; exit point of _SSD_GetState
+                      00238 
+                      00239 ;***
+                      00240 ;  pBlock Stats: dbName = C
+                      00241 ;***
+                      00242 ;has an exit
+                      00243 ;3 compiler assigned registers:
+                      00244 ;   r0x1015
+                      00245 ;   r0x1016
+                      00246 ;   r0x1017
+                      00247 ;; Starting pCode block
+                      00248 S_SSD__SSD_GetSymbol    code
+0000                  00249 _SSD_GetSymbol:
+                      00250 ; 2 exit points
+                      00251 ;       .line   192; "SSD.c"    tSSD_Symbol SSD_GetSymbol(tSSD ssd)
+0000   0??? 0???      00252         BANKSEL r0x1015
+0002   00??           00253         MOVWF   r0x1015
+                      00254 ;       .line   196; "SSD.c"    ret = ssd_symbols[ssd];
+0003   3E??           00255         ADDLW   (_ssd_symbols + 0)
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  6
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0004   00??           00256         MOVWF   r0x1015
+0005   30??           00257         MOVLW   high (_ssd_symbols + 0)
+0006   1803           00258         BTFSC   STATUS,0
+0007   3E01           00259         ADDLW   0x01
+0008   00??           00260         MOVWF   r0x1016
+0009   08??           00261         MOVF    r0x1015,W
+000A   1283 1303      00262         BANKSEL FSR
+000C   0084           00263         MOVWF   FSR
+000D   1383           00264         BCF     STATUS,7
+000E   0??? 0???      00265         BANKSEL r0x1016
+0010   18??           00266         BTFSC   r0x1016,0
+0011   1783           00267         BSF     STATUS,7
+0012   1283 1303      00268         BANKSEL INDF
+0014   0800           00269         MOVF    INDF,W
+                      00270 ;;1     MOVWF   r0x1017
+                      00271 ;       .line   199; "SSD.c"    }
+0015   0008           00272         RETURN  
+                      00273 ; exit point of _SSD_GetSymbol
+                      00274 
+                      00275 ;***
+                      00276 ;  pBlock Stats: dbName = C
+                      00277 ;***
+                      00278 ;has an exit
+                      00279 ;functions called:
+                      00280 ;   _GPIO_SetPortPinState
+                      00281 ;   _GPIO_SetPortPinState
+                      00282 ;   _GPIO_SetPortPinState
+                      00283 ;   _GPIO_SetPortPinState
+                      00284 ;   _GPIO_SetPortPinState
+                      00285 ;   _GPIO_SetPortPinState
+                      00286 ;   _GPIO_SetPortPinState
+                      00287 ;   _GPIO_SetPortPinState
+                      00288 ;4 compiler assigned registers:
+                      00289 ;   r0x1018
+                      00290 ;   STK00
+                      00291 ;   r0x1019
+                      00292 ;   STK01
+                      00293 ;; Starting pCode block
+                      00294 S_SSD__SSD_SetState     code
+0000                  00295 _SSD_SetState:
+                      00296 ; 2 exit points
+                      00297 ;       .line   169; "SSD.c"    void SSD_SetState(tSSD ssd, tSSD_State state)
+0000   0??? 0???      00298         BANKSEL r0x1018
+0002   00??           00299         MOVWF   r0x1018
+0003   08??           00300         MOVF    STK00,W
+0004   00??           00301         MOVWF   r0x1019
+                      00302 ;;swapping arguments (AOP_TYPEs 1/2)
+                      00303 ;;unsigned compare: left >= lit(0x4=4), size=1
+                      00304 ;       .line   171; "SSD.c"    switch(ssd)
+0005   3004           00305         MOVLW   0x04
+0006   02??           00306         SUBWF   r0x1018,W
+0007   1803           00307         BTFSC   STATUS,0
+0008   2???           00308         GOTO    _00165_DS_
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  7
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00309 ;;genSkipc:3307: created from rifx:00000000047A57B0
+0009   30??           00310         MOVLW   HIGH(_00172_DS_)
+000A   1283 1303      00311         BANKSEL PCLATH
+000C   008A           00312         MOVWF   PCLATH
+000D   30??           00313         MOVLW   _00172_DS_
+000E   0??? 0???      00314         BANKSEL r0x1018
+0010   07??           00315         ADDWF   r0x1018,W
+0011   1C03           00316         BTFSS   STATUS,0
+0012   2???           00317         GOTO    _00002_DS_
+0013   1283 1303      00318         BANKSEL PCLATH
+0015   0A8A           00319         INCF    PCLATH,F
+0016                  00320 _00002_DS_:
+0016   0082           00321         MOVWF   PCL
+0017                  00322 _00172_DS_:
+0017   2???           00323         GOTO    _00159_DS_
+0018   2???           00324         GOTO    _00160_DS_
+0019   2???           00325         GOTO    _00161_DS_
+001A   2???           00326         GOTO    _00162_DS_
+001B                  00327 _00159_DS_:
+                      00328 ;       .line   174; "SSD.c"    GPIO_SetPortPinState(SSD_L_PORT ,SSD_L_PIN , state);
+001B   0??? 0???      00329         BANKSEL r0x1019
+001D   08??           00330         MOVF    r0x1019,W
+001E   00??           00331         MOVWF   STK01
+001F   3002           00332         MOVLW   0x02
+0020   00??           00333         MOVWF   STK00
+0021   3000           00334         MOVLW   0x00
+0022   0??? 0???      00335         PAGESEL _GPIO_SetPortPinState
+0024   2???           00336         CALL    _GPIO_SetPortPinState
+0025   0??? 0???      00337         PAGESEL $
+                      00338 ;       .line   175; "SSD.c"    break;
+0027   2???           00339         GOTO    _00165_DS_
+0028                  00340 _00160_DS_:
+                      00341 ;       .line   177; "SSD.c"    GPIO_SetPortPinState(SSD_ML_PORT ,SSD_ML_PIN , state);
+0028   0??? 0???      00342         BANKSEL r0x1019
+002A   08??           00343         MOVF    r0x1019,W
+002B   00??           00344         MOVWF   STK01
+002C   3003           00345         MOVLW   0x03
+002D   00??           00346         MOVWF   STK00
+002E   3000           00347         MOVLW   0x00
+002F   0??? 0???      00348         PAGESEL _GPIO_SetPortPinState
+0031   2???           00349         CALL    _GPIO_SetPortPinState
+0032   0??? 0???      00350         PAGESEL $
+                      00351 ;       .line   179; "SSD.c"    break;
+0034   2???           00352         GOTO    _00165_DS_
+0035                  00353 _00161_DS_:
+                      00354 ;       .line   181; "SSD.c"    GPIO_SetPortPinState(SSD_MR_PORT , SSD_MR_PIN, state);
+0035   0??? 0???      00355         BANKSEL r0x1019
+0037   08??           00356         MOVF    r0x1019,W
+0038   00??           00357         MOVWF   STK01
+0039   3004           00358         MOVLW   0x04
+003A   00??           00359         MOVWF   STK00
+003B   3000           00360         MOVLW   0x00
+003C   0??? 0???      00361         PAGESEL _GPIO_SetPortPinState
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  8
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+003E   2???           00362         CALL    _GPIO_SetPortPinState
+003F   0??? 0???      00363         PAGESEL $
+                      00364 ;       .line   182; "SSD.c"    break;
+0041   2???           00365         GOTO    _00165_DS_
+0042                  00366 _00162_DS_:
+                      00367 ;       .line   184; "SSD.c"    GPIO_SetPortPinState(PORT_A, SSD_R_PIN, state);
+0042   0??? 0???      00368         BANKSEL r0x1019
+0044   08??           00369         MOVF    r0x1019,W
+0045   00??           00370         MOVWF   STK01
+0046   3005           00371         MOVLW   0x05
+0047   00??           00372         MOVWF   STK00
+0048   3000           00373         MOVLW   0x00
+0049   0??? 0???      00374         PAGESEL _GPIO_SetPortPinState
+004B   2???           00375         CALL    _GPIO_SetPortPinState
+004C   0??? 0???      00376         PAGESEL $
+004E                  00377 _00165_DS_:
+                      00378 ;       .line   190; "SSD.c"    }
+004E   0008           00379         RETURN  
+                      00380 ; exit point of _SSD_SetState
+                      00381 
+                      00382 ;***
+                      00383 ;  pBlock Stats: dbName = C
+                      00384 ;***
+                      00385 ;has an exit
+                      00386 ;4 compiler assigned registers:
+                      00387 ;   r0x101A
+                      00388 ;   STK00
+                      00389 ;   r0x101B
+                      00390 ;   r0x101C
+                      00391 ;; Starting pCode block
+                      00392 S_SSD__SSD_SetSymbol    code
+0000                  00393 _SSD_SetSymbol:
+                      00394 ; 2 exit points
+                      00395 ;       .line   164; "SSD.c"    void SSD_SetSymbol(tSSD ssd, tSSD_Symbol symbol)
+0000   0??? 0???      00396         BANKSEL r0x101A
+0002   00??           00397         MOVWF   r0x101A
+0003   08??           00398         MOVF    STK00,W
+0004   00??           00399         MOVWF   r0x101B
+                      00400 ;       .line   166; "SSD.c"    ssd_symbols[ssd] = symbol;
+0005   08??           00401         MOVF    r0x101A,W
+0006   3E??           00402         ADDLW   (_ssd_symbols + 0)
+0007   00??           00403         MOVWF   r0x101A
+0008   30??           00404         MOVLW   high (_ssd_symbols + 0)
+0009   1803           00405         BTFSC   STATUS,0
+000A   3E01           00406         ADDLW   0x01
+000B   00??           00407         MOVWF   r0x101C
+000C   08??           00408         MOVF    r0x101A,W
+000D   1283 1303      00409         BANKSEL FSR
+000F   0084           00410         MOVWF   FSR
+0010   1383           00411         BCF     STATUS,7
+0011   0??? 0???      00412         BANKSEL r0x101C
+0013   18??           00413         BTFSC   r0x101C,0
+0014   1783           00414         BSF     STATUS,7
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE  9
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0015   08??           00415         MOVF    r0x101B,W
+0016   1283 1303      00416         BANKSEL INDF
+0018   0080           00417         MOVWF   INDF
+                      00418 ;       .line   167; "SSD.c"    }
+0019   0008           00419         RETURN  
+                      00420 ; exit point of _SSD_SetSymbol
+                      00421 
+                      00422 ;***
+                      00423 ;  pBlock Stats: dbName = C
+                      00424 ;***
+                      00425 ;has an exit
+                      00426 ;functions called:
+                      00427 ;   _SSD_SetState
+                      00428 ;   _SSD_SetState
+                      00429 ;   _SSD_SetState
+                      00430 ;   _SSD_SetState
+                      00431 ;   _toggle_dot_state
+                      00432 ;   _GPIO_SetPortState
+                      00433 ;   _SSD_SetState
+                      00434 ;   _GPIO_SetPortState
+                      00435 ;   _SSD_SetState
+                      00436 ;   _GPIO_SetPortState
+                      00437 ;   _SSD_SetState
+                      00438 ;   _SSD_SetState
+                      00439 ;   _SSD_SetState
+                      00440 ;   _SSD_SetState
+                      00441 ;   _SSD_SetState
+                      00442 ;   _toggle_dot_state
+                      00443 ;   _GPIO_SetPortState
+                      00444 ;   _SSD_SetState
+                      00445 ;   _GPIO_SetPortState
+                      00446 ;   _SSD_SetState
+                      00447 ;   _GPIO_SetPortState
+                      00448 ;   _SSD_SetState
+                      00449 ;5 compiler assigned registers:
+                      00450 ;   STK00
+                      00451 ;   r0x101D
+                      00452 ;   r0x101E
+                      00453 ;   r0x101F
+                      00454 ;   r0x1020
+                      00455 ;; Starting pCode block
+                      00456 S_SSD__SSD_Update_2     code
+0000                  00457 _SSD_Update_2:
+                      00458 ; 2 exit points
+                      00459 ;       .line   108; "SSD.c"    toggle_dot_time++;
+0000   0??? 0???      00460         BANKSEL _toggle_dot_time
+0002   0A??           00461         INCF    _toggle_dot_time,F
+                      00462 ;       .line   110; "SSD.c"    SSD_SetState(SSD_N, SSD_OFF);
+0003   3000           00463         MOVLW   0x00
+0004   00??           00464         MOVWF   STK00
+0005   3002           00465         MOVLW   0x02
+0006   0??? 0???      00466         PAGESEL _SSD_SetState
+0008   2???           00467         CALL    _SSD_SetState
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 10
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0009   0??? 0???      00468         PAGESEL $
+                      00469 ;       .line   111; "SSD.c"    SSD_SetState(SSD_R, SSD_OFF);
+000B   3000           00470         MOVLW   0x00
+000C   00??           00471         MOVWF   STK00
+000D   3003           00472         MOVLW   0x03
+000E   0??? 0???      00473         PAGESEL _SSD_SetState
+0010   2???           00474         CALL    _SSD_SetState
+0011   0??? 0???      00475         PAGESEL $
+                      00476 ;       .line   113; "SSD.c"    SSD_SetState(SSD_L, SSD_OFF);
+0013   3000           00477         MOVLW   0x00
+0014   00??           00478         MOVWF   STK00
+0015   3000           00479         MOVLW   0x00
+0016   0??? 0???      00480         PAGESEL _SSD_SetState
+0018   2???           00481         CALL    _SSD_SetState
+0019   0??? 0???      00482         PAGESEL $
+                      00483 ;       .line   114; "SSD.c"    SSD_SetState(SSD_M, SSD_OFF);
+001B   3000           00484         MOVLW   0x00
+001C   00??           00485         MOVWF   STK00
+001D   3001           00486         MOVLW   0x01
+001E   0??? 0???      00487         PAGESEL _SSD_SetState
+0020   2???           00488         CALL    _SSD_SetState
+0021   0??? 0???      00489         PAGESEL $
+                      00490 ;       .line   115; "SSD.c"    if( toggle_dot_time ==  NUM_OF_TICKS_PER_ONE_SECOND)
+0023   0??? 0???      00491         BANKSEL _toggle_dot_time
+0025   08??           00492         MOVF    _toggle_dot_time,W
+0026   3A32           00493         XORLW   0x32
+0027   1D03           00494         BTFSS   STATUS,2
+0028   2???           00495         GOTO    _00140_DS_
+                      00496 ;       .line   117; "SSD.c"    toggle_dot_time=0;
+0029   01??           00497         CLRF    _toggle_dot_time
+                      00498 ;       .line   118; "SSD.c"    toggle_dot_state();
+002A   0??? 0???      00499         PAGESEL _toggle_dot_state
+002C   2???           00500         CALL    _toggle_dot_state
+002D   0??? 0???      00501         PAGESEL $
+002F                  00502 _00140_DS_:
+                      00503 ;       .line   121; "SSD.c"    if(current_ssd ==SSD_M )
+002F   0??? 0???      00504         BANKSEL _SSD_Update_2_current_ssd_65536_26
+0031   08??           00505         MOVF    _SSD_Update_2_current_ssd_65536_26,W
+0032   3A01           00506         XORLW   0x01
+0033   1D03           00507         BTFSS   STATUS,2
+0034   2???           00508         GOTO    _00145_DS_
+                      00509 ;       .line   123; "SSD.c"    if( dot_state == 1)
+0035   0??? 0???      00510         BANKSEL _dot_state
+0037   08??           00511         MOVF    _dot_state,W
+0038   3A01           00512         XORLW   0x01
+0039   1D03           00513         BTFSS   STATUS,2
+003A   2???           00514         GOTO    _00142_DS_
+                      00515 ;       .line   127; "SSD.c"    GPIO_SetPortState(SSD_data_PORT , ssd_data[ssd_symbols[current_ssd]] | 0
+                            x80);
+003B   0??? 0???      00516         BANKSEL _SSD_Update_2_current_ssd_65536_26
+003D   08??           00517         MOVF    _SSD_Update_2_current_ssd_65536_26,W
+003E   3E??           00518         ADDLW   (_ssd_symbols + 0)
+003F   0??? 0???      00519         BANKSEL r0x101D
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 11
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0041   00??           00520         MOVWF   r0x101D
+0042   30??           00521         MOVLW   high (_ssd_symbols + 0)
+0043   1803           00522         BTFSC   STATUS,0
+0044   3E01           00523         ADDLW   0x01
+0045   00??           00524         MOVWF   r0x101E
+0046   08??           00525         MOVF    r0x101D,W
+0047   1283 1303      00526         BANKSEL FSR
+0049   0084           00527         MOVWF   FSR
+004A   1383           00528         BCF     STATUS,7
+004B   0??? 0???      00529         BANKSEL r0x101E
+004D   18??           00530         BTFSC   r0x101E,0
+004E   1783           00531         BSF     STATUS,7
+004F   1283 1303      00532         BANKSEL INDF
+0051   0800           00533         MOVF    INDF,W
+0052   0??? 0???      00534         BANKSEL r0x101F
+0054   00??           00535         MOVWF   r0x101F
+0055   3E??           00536         ADDLW   (_ssd_data + 0)
+0056   00??           00537         MOVWF   r0x101D
+0057   30??           00538         MOVLW   high (_ssd_data + 0)
+0058   1803           00539         BTFSC   STATUS,0
+0059   3E01           00540         ADDLW   0x01
+005A   00??           00541         MOVWF   r0x101E
+005B   08??           00542         MOVF    r0x101D,W
+005C   1283 1303      00543         BANKSEL FSR
+005E   0084           00544         MOVWF   FSR
+005F   1383           00545         BCF     STATUS,7
+0060   0??? 0???      00546         BANKSEL r0x101E
+0062   18??           00547         BTFSC   r0x101E,0
+0063   1783           00548         BSF     STATUS,7
+0064   1283 1303      00549         BANKSEL INDF
+0066   0800           00550         MOVF    INDF,W
+0067   0??? 0???      00551         BANKSEL r0x101F
+0069   00??           00552         MOVWF   r0x101F
+006A   3080           00553         MOVLW   0x80
+006B   04??           00554         IORWF   r0x101F,W
+006C   00??           00555         MOVWF   r0x101D
+006D   00??           00556         MOVWF   STK00
+006E   3003           00557         MOVLW   0x03
+006F   0??? 0???      00558         PAGESEL _GPIO_SetPortState
+0071   2???           00559         CALL    _GPIO_SetPortState
+0072   0??? 0???      00560         PAGESEL $
+                      00561 ;       .line   129; "SSD.c"    SSD_SetState(current_ssd, SSD_ON);
+0074   3001           00562         MOVLW   0x01
+0075   00??           00563         MOVWF   STK00
+0076   0??? 0???      00564         BANKSEL _SSD_Update_2_current_ssd_65536_26
+0078   08??           00565         MOVF    _SSD_Update_2_current_ssd_65536_26,W
+0079   0??? 0???      00566         PAGESEL _SSD_SetState
+007B   2???           00567         CALL    _SSD_SetState
+007C   0??? 0???      00568         PAGESEL $
+007E   2???           00569         GOTO    _00146_DS_
+007F                  00570 _00142_DS_:
+                      00571 ;       .line   135; "SSD.c"    GPIO_SetPortState(SSD_data_PORT , ssd_data[ssd_symbols[current_ssd]] );
+007F   0??? 0???      00572         BANKSEL _SSD_Update_2_current_ssd_65536_26
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 12
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0081   08??           00573         MOVF    _SSD_Update_2_current_ssd_65536_26,W
+0082   3E??           00574         ADDLW   (_ssd_symbols + 0)
+0083   0??? 0???      00575         BANKSEL r0x101D
+0085   00??           00576         MOVWF   r0x101D
+0086   30??           00577         MOVLW   high (_ssd_symbols + 0)
+0087   1803           00578         BTFSC   STATUS,0
+0088   3E01           00579         ADDLW   0x01
+0089   00??           00580         MOVWF   r0x101F
+008A   08??           00581         MOVF    r0x101D,W
+008B   1283 1303      00582         BANKSEL FSR
+008D   0084           00583         MOVWF   FSR
+008E   1383           00584         BCF     STATUS,7
+008F   0??? 0???      00585         BANKSEL r0x101F
+0091   18??           00586         BTFSC   r0x101F,0
+0092   1783           00587         BSF     STATUS,7
+0093   1283 1303      00588         BANKSEL INDF
+0095   0800           00589         MOVF    INDF,W
+0096   0??? 0???      00590         BANKSEL r0x1020
+0098   00??           00591         MOVWF   r0x1020
+0099   3E??           00592         ADDLW   (_ssd_data + 0)
+009A   00??           00593         MOVWF   r0x101D
+009B   30??           00594         MOVLW   high (_ssd_data + 0)
+009C   1803           00595         BTFSC   STATUS,0
+009D   3E01           00596         ADDLW   0x01
+009E   00??           00597         MOVWF   r0x101F
+009F   08??           00598         MOVF    r0x101D,W
+00A0   1283 1303      00599         BANKSEL FSR
+00A2   0084           00600         MOVWF   FSR
+00A3   1383           00601         BCF     STATUS,7
+00A4   0??? 0???      00602         BANKSEL r0x101F
+00A6   18??           00603         BTFSC   r0x101F,0
+00A7   1783           00604         BSF     STATUS,7
+00A8   1283 1303      00605         BANKSEL INDF
+00AA   0800           00606         MOVF    INDF,W
+00AB   0??? 0???      00607         BANKSEL r0x1020
+00AD   00??           00608         MOVWF   r0x1020
+00AE   00??           00609         MOVWF   STK00
+00AF   3003           00610         MOVLW   0x03
+00B0   0??? 0???      00611         PAGESEL _GPIO_SetPortState
+00B2   2???           00612         CALL    _GPIO_SetPortState
+00B3   0??? 0???      00613         PAGESEL $
+                      00614 ;       .line   137; "SSD.c"    SSD_SetState(current_ssd, SSD_ON);
+00B5   3001           00615         MOVLW   0x01
+00B6   00??           00616         MOVWF   STK00
+00B7   0??? 0???      00617         BANKSEL _SSD_Update_2_current_ssd_65536_26
+00B9   08??           00618         MOVF    _SSD_Update_2_current_ssd_65536_26,W
+00BA   0??? 0???      00619         PAGESEL _SSD_SetState
+00BC   2???           00620         CALL    _SSD_SetState
+00BD   0??? 0???      00621         PAGESEL $
+00BF   2???           00622         GOTO    _00146_DS_
+00C0                  00623 _00145_DS_:
+                      00624 ;       .line   146; "SSD.c"    GPIO_SetPortState(SSD_data_PORT , ssd_data[ssd_symbols[current_ssd]] );
+00C0   0??? 0???      00625         BANKSEL _SSD_Update_2_current_ssd_65536_26
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 13
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+00C2   08??           00626         MOVF    _SSD_Update_2_current_ssd_65536_26,W
+00C3   3E??           00627         ADDLW   (_ssd_symbols + 0)
+00C4   0??? 0???      00628         BANKSEL r0x101D
+00C6   00??           00629         MOVWF   r0x101D
+00C7   30??           00630         MOVLW   high (_ssd_symbols + 0)
+00C8   1803           00631         BTFSC   STATUS,0
+00C9   3E01           00632         ADDLW   0x01
+00CA   00??           00633         MOVWF   r0x101F
+00CB   08??           00634         MOVF    r0x101D,W
+00CC   1283 1303      00635         BANKSEL FSR
+00CE   0084           00636         MOVWF   FSR
+00CF   1383           00637         BCF     STATUS,7
+00D0   0??? 0???      00638         BANKSEL r0x101F
+00D2   18??           00639         BTFSC   r0x101F,0
+00D3   1783           00640         BSF     STATUS,7
+00D4   1283 1303      00641         BANKSEL INDF
+00D6   0800           00642         MOVF    INDF,W
+00D7   0??? 0???      00643         BANKSEL r0x1020
+00D9   00??           00644         MOVWF   r0x1020
+00DA   3E??           00645         ADDLW   (_ssd_data + 0)
+00DB   00??           00646         MOVWF   r0x101D
+00DC   30??           00647         MOVLW   high (_ssd_data + 0)
+00DD   1803           00648         BTFSC   STATUS,0
+00DE   3E01           00649         ADDLW   0x01
+00DF   00??           00650         MOVWF   r0x101F
+00E0   08??           00651         MOVF    r0x101D,W
+00E1   1283 1303      00652         BANKSEL FSR
+00E3   0084           00653         MOVWF   FSR
+00E4   1383           00654         BCF     STATUS,7
+00E5   0??? 0???      00655         BANKSEL r0x101F
+00E7   18??           00656         BTFSC   r0x101F,0
+00E8   1783           00657         BSF     STATUS,7
+00E9   1283 1303      00658         BANKSEL INDF
+00EB   0800           00659         MOVF    INDF,W
+00EC   0??? 0???      00660         BANKSEL r0x1020
+00EE   00??           00661         MOVWF   r0x1020
+00EF   00??           00662         MOVWF   STK00
+00F0   3003           00663         MOVLW   0x03
+00F1   0??? 0???      00664         PAGESEL _GPIO_SetPortState
+00F3   2???           00665         CALL    _GPIO_SetPortState
+00F4   0??? 0???      00666         PAGESEL $
+                      00667 ;       .line   148; "SSD.c"    SSD_SetState(current_ssd, SSD_ON);
+00F6   3001           00668         MOVLW   0x01
+00F7   00??           00669         MOVWF   STK00
+00F8   0??? 0???      00670         BANKSEL _SSD_Update_2_current_ssd_65536_26
+00FA   08??           00671         MOVF    _SSD_Update_2_current_ssd_65536_26,W
+00FB   0??? 0???      00672         PAGESEL _SSD_SetState
+00FD   2???           00673         CALL    _SSD_SetState
+00FE   0??? 0???      00674         PAGESEL $
+0100                  00675 _00146_DS_:
+                      00676 ;       .line   151; "SSD.c"    if(current_ssd == SSD_R)
+0100   0??? 0???      00677         BANKSEL _SSD_Update_2_current_ssd_65536_26
+0102   08??           00678         MOVF    _SSD_Update_2_current_ssd_65536_26,W
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 14
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0103   3A03           00679         XORLW   0x03
+0104   1D03           00680         BTFSS   STATUS,2
+0105   2???           00681         GOTO    _00148_DS_
+                      00682 ;       .line   153; "SSD.c"    current_ssd  = SSD_L;
+0106   01??           00683         CLRF    _SSD_Update_2_current_ssd_65536_26
+0107   2???           00684         GOTO    _00150_DS_
+0108                  00685 _00148_DS_:
+                      00686 ;       .line   157; "SSD.c"    current_ssd++;
+0108   0??? 0???      00687         BANKSEL _SSD_Update_2_current_ssd_65536_26
+010A   0A??           00688         INCF    _SSD_Update_2_current_ssd_65536_26,F
+010B                  00689 _00150_DS_:
+                      00690 ;       .line   162; "SSD.c"    }
+010B   0008           00691         RETURN  
+                      00692 ; exit point of _SSD_Update_2
+                      00693 
+                      00694 ;***
+                      00695 ;  pBlock Stats: dbName = C
+                      00696 ;***
+                      00697 ;has an exit
+                      00698 ;functions called:
+                      00699 ;   _SSD_SetState
+                      00700 ;   _SSD_SetState
+                      00701 ;   _SSD_SetState
+                      00702 ;   _SSD_SetState
+                      00703 ;   _GPIO_SetPortState
+                      00704 ;   _SSD_SetState
+                      00705 ;   _SSD_SetState
+                      00706 ;   _SSD_SetState
+                      00707 ;   _SSD_SetState
+                      00708 ;   _SSD_SetState
+                      00709 ;   _GPIO_SetPortState
+                      00710 ;   _SSD_SetState
+                      00711 ;4 compiler assigned registers:
+                      00712 ;   STK00
+                      00713 ;   r0x1021
+                      00714 ;   r0x1022
+                      00715 ;   r0x1023
+                      00716 ;; Starting pCode block
+                      00717 S_SSD__SSD_Update       code
+0000                  00718 _SSD_Update:
+                      00719 ; 2 exit points
+                      00720 ;       .line   80; "SSD.c"     SSD_SetState(SSD_N, SSD_OFF);
+0000   3000           00721         MOVLW   0x00
+0001   00??           00722         MOVWF   STK00
+0002   3002           00723         MOVLW   0x02
+0003   0??? 0???      00724         PAGESEL _SSD_SetState
+0005   2???           00725         CALL    _SSD_SetState
+0006   0??? 0???      00726         PAGESEL $
+                      00727 ;       .line   81; "SSD.c"     SSD_SetState(SSD_R, SSD_OFF);
+0008   3000           00728         MOVLW   0x00
+0009   00??           00729         MOVWF   STK00
+000A   3003           00730         MOVLW   0x03
+000B   0??? 0???      00731         PAGESEL _SSD_SetState
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 15
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+000D   2???           00732         CALL    _SSD_SetState
+000E   0??? 0???      00733         PAGESEL $
+                      00734 ;       .line   83; "SSD.c"     SSD_SetState(SSD_L, SSD_OFF);
+0010   3000           00735         MOVLW   0x00
+0011   00??           00736         MOVWF   STK00
+0012   3000           00737         MOVLW   0x00
+0013   0??? 0???      00738         PAGESEL _SSD_SetState
+0015   2???           00739         CALL    _SSD_SetState
+0016   0??? 0???      00740         PAGESEL $
+                      00741 ;       .line   84; "SSD.c"     SSD_SetState(SSD_M, SSD_OFF);
+0018   3000           00742         MOVLW   0x00
+0019   00??           00743         MOVWF   STK00
+001A   3001           00744         MOVLW   0x01
+001B   0??? 0???      00745         PAGESEL _SSD_SetState
+001D   2???           00746         CALL    _SSD_SetState
+001E   0??? 0???      00747         PAGESEL $
+                      00748 ;       .line   87; "SSD.c"     GPIO_SetPortState(SSD_data_PORT , ssd_data[ssd_symbols[current_ssd]] );
+0020   0??? 0???      00749         BANKSEL _SSD_Update_current_ssd_65536_22
+0022   08??           00750         MOVF    _SSD_Update_current_ssd_65536_22,W
+0023   3E??           00751         ADDLW   (_ssd_symbols + 0)
+0024   0??? 0???      00752         BANKSEL r0x1021
+0026   00??           00753         MOVWF   r0x1021
+0027   30??           00754         MOVLW   high (_ssd_symbols + 0)
+0028   1803           00755         BTFSC   STATUS,0
+0029   3E01           00756         ADDLW   0x01
+002A   00??           00757         MOVWF   r0x1022
+002B   08??           00758         MOVF    r0x1021,W
+002C   1283 1303      00759         BANKSEL FSR
+002E   0084           00760         MOVWF   FSR
+002F   1383           00761         BCF     STATUS,7
+0030   0??? 0???      00762         BANKSEL r0x1022
+0032   18??           00763         BTFSC   r0x1022,0
+0033   1783           00764         BSF     STATUS,7
+0034   1283 1303      00765         BANKSEL INDF
+0036   0800           00766         MOVF    INDF,W
+0037   0??? 0???      00767         BANKSEL r0x1023
+0039   00??           00768         MOVWF   r0x1023
+003A   3E??           00769         ADDLW   (_ssd_data + 0)
+003B   00??           00770         MOVWF   r0x1021
+003C   30??           00771         MOVLW   high (_ssd_data + 0)
+003D   1803           00772         BTFSC   STATUS,0
+003E   3E01           00773         ADDLW   0x01
+003F   00??           00774         MOVWF   r0x1022
+0040   08??           00775         MOVF    r0x1021,W
+0041   1283 1303      00776         BANKSEL FSR
+0043   0084           00777         MOVWF   FSR
+0044   1383           00778         BCF     STATUS,7
+0045   0??? 0???      00779         BANKSEL r0x1022
+0047   18??           00780         BTFSC   r0x1022,0
+0048   1783           00781         BSF     STATUS,7
+0049   1283 1303      00782         BANKSEL INDF
+004B   0800           00783         MOVF    INDF,W
+004C   0??? 0???      00784         BANKSEL r0x1023
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 16
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+004E   00??           00785         MOVWF   r0x1023
+004F   00??           00786         MOVWF   STK00
+0050   3003           00787         MOVLW   0x03
+0051   0??? 0???      00788         PAGESEL _GPIO_SetPortState
+0053   2???           00789         CALL    _GPIO_SetPortState
+0054   0??? 0???      00790         PAGESEL $
+                      00791 ;       .line   89; "SSD.c"     SSD_SetState(current_ssd, SSD_ON);
+0056   3001           00792         MOVLW   0x01
+0057   00??           00793         MOVWF   STK00
+0058   0??? 0???      00794         BANKSEL _SSD_Update_current_ssd_65536_22
+005A   08??           00795         MOVF    _SSD_Update_current_ssd_65536_22,W
+005B   0??? 0???      00796         PAGESEL _SSD_SetState
+005D   2???           00797         CALL    _SSD_SetState
+005E   0??? 0???      00798         PAGESEL $
+                      00799 ;       .line   91; "SSD.c"     if(current_ssd == SSD_R)
+0060   0??? 0???      00800         BANKSEL _SSD_Update_current_ssd_65536_22
+0062   08??           00801         MOVF    _SSD_Update_current_ssd_65536_22,W
+0063   3A03           00802         XORLW   0x03
+0064   1D03           00803         BTFSS   STATUS,2
+0065   2???           00804         GOTO    _00132_DS_
+                      00805 ;       .line   93; "SSD.c"     current_ssd  = SSD_L;
+0066   01??           00806         CLRF    _SSD_Update_current_ssd_65536_22
+0067   2???           00807         GOTO    _00134_DS_
+0068                  00808 _00132_DS_:
+                      00809 ;       .line   97; "SSD.c"     current_ssd++;
+0068   0??? 0???      00810         BANKSEL _SSD_Update_current_ssd_65536_22
+006A   0A??           00811         INCF    _SSD_Update_current_ssd_65536_22,F
+006B                  00812 _00134_DS_:
+                      00813 ;       .line   102; "SSD.c"    }
+006B   0008           00814         RETURN  
+                      00815 ; exit point of _SSD_Update
+                      00816 
+                      00817 ;***
+                      00818 ;  pBlock Stats: dbName = C
+                      00819 ;***
+                      00820 ;has an exit
+                      00821 ;functions called:
+                      00822 ;   _GPIO_InitPort
+                      00823 ;   _GPIO_SetPortState
+                      00824 ;   _GPIO_InitPortPin
+                      00825 ;   _GPIO_InitPortPin
+                      00826 ;   _GPIO_InitPortPin
+                      00827 ;   _GPIO_InitPortPin
+                      00828 ;   _SSD_SetState
+                      00829 ;   _SSD_SetSymbol
+                      00830 ;   _GPIO_InitPort
+                      00831 ;   _GPIO_SetPortState
+                      00832 ;   _GPIO_InitPortPin
+                      00833 ;   _GPIO_InitPortPin
+                      00834 ;   _GPIO_InitPortPin
+                      00835 ;   _GPIO_InitPortPin
+                      00836 ;   _SSD_SetState
+                      00837 ;   _SSD_SetSymbol
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 17
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00838 ;8 compiler assigned registers:
+                      00839 ;   r0x1024
+                      00840 ;   STK00
+                      00841 ;   r0x1025
+                      00842 ;   STK01
+                      00843 ;   r0x1026
+                      00844 ;   r0x1027
+                      00845 ;   r0x1028
+                      00846 ;   r0x1029
+                      00847 ;; Starting pCode block
+                      00848 S_SSD__SSD_Init code
+0000                  00849 _SSD_Init:
+                      00850 ; 2 exit points
+                      00851 ;       .line   40; "SSD.c"     void SSD_Init(tSSD ssd, tSSD_State initial_state, tSSD_Symbol initial_sy
+                            mbol)
+0000   0??? 0???      00852         BANKSEL r0x1024
+0002   00??           00853         MOVWF   r0x1024
+0003   08??           00854         MOVF    STK00,W
+0004   00??           00855         MOVWF   r0x1025
+0005   08??           00856         MOVF    STK01,W
+0006   00??           00857         MOVWF   r0x1026
+                      00858 ;       .line   43; "SSD.c"     GPIO_InitPort(SSD_data_PORT, GPIO_OUT);
+0007   3000           00859         MOVLW   0x00
+0008   00??           00860         MOVWF   STK00
+0009   3003           00861         MOVLW   0x03
+000A   0??? 0???      00862         PAGESEL _GPIO_InitPort
+000C   2???           00863         CALL    _GPIO_InitPort
+000D   0??? 0???      00864         PAGESEL $
+                      00865 ;       .line   44; "SSD.c"     GPIO_SetPortState(SSD_data_PORT, ssd_data[initial_symbol]);
+000F   0??? 0???      00866         BANKSEL r0x1026
+0011   08??           00867         MOVF    r0x1026,W
+0012   3E??           00868         ADDLW   (_ssd_data + 0)
+0013   00??           00869         MOVWF   r0x1027
+0014   30??           00870         MOVLW   high (_ssd_data + 0)
+0015   1803           00871         BTFSC   STATUS,0
+0016   3E01           00872         ADDLW   0x01
+0017   00??           00873         MOVWF   r0x1028
+0018   08??           00874         MOVF    r0x1027,W
+0019   1283 1303      00875         BANKSEL FSR
+001B   0084           00876         MOVWF   FSR
+001C   1383           00877         BCF     STATUS,7
+001D   0??? 0???      00878         BANKSEL r0x1028
+001F   18??           00879         BTFSC   r0x1028,0
+0020   1783           00880         BSF     STATUS,7
+0021   1283 1303      00881         BANKSEL INDF
+0023   0800           00882         MOVF    INDF,W
+                      00883 ;;1     MOVWF   r0x1029
+0024   00??           00884         MOVWF   STK00
+0025   3003           00885         MOVLW   0x03
+0026   0??? 0???      00886         PAGESEL _GPIO_SetPortState
+0028   2???           00887         CALL    _GPIO_SetPortState
+0029   0??? 0???      00888         PAGESEL $
+                      00889 ;;swapping arguments (AOP_TYPEs 1/2)
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 18
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00890 ;;unsigned compare: left >= lit(0x4=4), size=1
+                      00891 ;       .line   47; "SSD.c"     switch(ssd)
+002B   3004           00892         MOVLW   0x04
+002C   0??? 0???      00893         BANKSEL r0x1024
+002E   02??           00894         SUBWF   r0x1024,W
+002F   1803           00895         BTFSC   STATUS,0
+0030   2???           00896         GOTO    _00118_DS_
+                      00897 ;;genSkipc:3307: created from rifx:00000000047A57B0
+0031   30??           00898         MOVLW   HIGH(_00126_DS_)
+0032   1283 1303      00899         BANKSEL PCLATH
+0034   008A           00900         MOVWF   PCLATH
+0035   30??           00901         MOVLW   _00126_DS_
+0036   0??? 0???      00902         BANKSEL r0x1024
+0038   07??           00903         ADDWF   r0x1024,W
+0039   1C03           00904         BTFSS   STATUS,0
+003A   2???           00905         GOTO    _00003_DS_
+003B   1283 1303      00906         BANKSEL PCLATH
+003D   0A8A           00907         INCF    PCLATH,F
+003E                  00908 _00003_DS_:
+003E   0082           00909         MOVWF   PCL
+003F                  00910 _00126_DS_:
+003F   2???           00911         GOTO    _00113_DS_
+0040   2???           00912         GOTO    _00114_DS_
+0041   2???           00913         GOTO    _00115_DS_
+0042   2???           00914         GOTO    _00116_DS_
+0043                  00915 _00113_DS_:
+                      00916 ;       .line   50; "SSD.c"     GPIO_InitPortPin(PORT_A, SSD_L_PIN, GPIO_OUT);
+0043   3000           00917         MOVLW   0x00
+0044   00??           00918         MOVWF   STK01
+0045   3002           00919         MOVLW   0x02
+0046   00??           00920         MOVWF   STK00
+0047   3000           00921         MOVLW   0x00
+0048   0??? 0???      00922         PAGESEL _GPIO_InitPortPin
+004A   2???           00923         CALL    _GPIO_InitPortPin
+004B   0??? 0???      00924         PAGESEL $
+                      00925 ;       .line   51; "SSD.c"     break;
+004D   2???           00926         GOTO    _00118_DS_
+004E                  00927 _00114_DS_:
+                      00928 ;       .line   53; "SSD.c"     GPIO_InitPortPin(PORT_A, SSD_ML_PIN, GPIO_OUT);
+004E   3000           00929         MOVLW   0x00
+004F   00??           00930         MOVWF   STK01
+0050   3003           00931         MOVLW   0x03
+0051   00??           00932         MOVWF   STK00
+0052   3000           00933         MOVLW   0x00
+0053   0??? 0???      00934         PAGESEL _GPIO_InitPortPin
+0055   2???           00935         CALL    _GPIO_InitPortPin
+0056   0??? 0???      00936         PAGESEL $
+                      00937 ;       .line   54; "SSD.c"     break;
+0058   2???           00938         GOTO    _00118_DS_
+0059                  00939 _00115_DS_:
+                      00940 ;       .line   56; "SSD.c"     GPIO_InitPortPin(PORT_A, SSD_MR_PIN, GPIO_OUT);
+0059   3000           00941         MOVLW   0x00
+005A   00??           00942         MOVWF   STK01
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 19
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+005B   3004           00943         MOVLW   0x04
+005C   00??           00944         MOVWF   STK00
+005D   3000           00945         MOVLW   0x00
+005E   0??? 0???      00946         PAGESEL _GPIO_InitPortPin
+0060   2???           00947         CALL    _GPIO_InitPortPin
+0061   0??? 0???      00948         PAGESEL $
+                      00949 ;       .line   57; "SSD.c"     break;
+0063   2???           00950         GOTO    _00118_DS_
+0064                  00951 _00116_DS_:
+                      00952 ;       .line   59; "SSD.c"     GPIO_InitPortPin(PORT_A, SSD_R_PIN, GPIO_OUT);
+0064   3000           00953         MOVLW   0x00
+0065   00??           00954         MOVWF   STK01
+0066   3005           00955         MOVLW   0x05
+0067   00??           00956         MOVWF   STK00
+0068   3000           00957         MOVLW   0x00
+0069   0??? 0???      00958         PAGESEL _GPIO_InitPortPin
+006B   2???           00959         CALL    _GPIO_InitPortPin
+006C   0??? 0???      00960         PAGESEL $
+006E                  00961 _00118_DS_:
+                      00962 ;       .line   67; "SSD.c"     SSD_SetState(ssd, initial_state);
+006E   0??? 0???      00963         BANKSEL r0x1025
+0070   08??           00964         MOVF    r0x1025,W
+0071   00??           00965         MOVWF   STK00
+0072   08??           00966         MOVF    r0x1024,W
+0073   0??? 0???      00967         PAGESEL _SSD_SetState
+0075   2???           00968         CALL    _SSD_SetState
+0076   0??? 0???      00969         PAGESEL $
+                      00970 ;       .line   70; "SSD.c"     SSD_SetSymbol(ssd, initial_symbol);
+0078   0??? 0???      00971         BANKSEL r0x1026
+007A   08??           00972         MOVF    r0x1026,W
+007B   00??           00973         MOVWF   STK00
+007C   08??           00974         MOVF    r0x1024,W
+007D   0??? 0???      00975         PAGESEL _SSD_SetSymbol
+007F   2???           00976         CALL    _SSD_SetSymbol
+0080   0??? 0???      00977         PAGESEL $
+                      00978 ;       .line   72; "SSD.c"     }
+0082   0008           00979         RETURN  
+                      00980 ; exit point of _SSD_Init
+                      00981 
+                      00982 ;***
+                      00983 ;  pBlock Stats: dbName = C
+                      00984 ;***
+                      00985 ;has an exit
+                      00986 ;; Starting pCode block
+                      00987 S_SSD__toggle_dot_state code
+0000                  00988 _toggle_dot_state:
+                      00989 ; 2 exit points
+                      00990 ;       .line   12; "SSD.c"     if(dot_state ==0)
+0000   0??? 0???      00991         BANKSEL _dot_state
+0002   08??           00992         MOVF    _dot_state,W
+0003   1D03           00993         BTFSS   STATUS,2
+0004   2???           00994         GOTO    _00106_DS_
+                      00995 ;       .line   14; "SSD.c"     dot_state = 1;
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 20
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+0005   3001           00996         MOVLW   0x01
+0006   00??           00997         MOVWF   _dot_state
+0007   2???           00998         GOTO    _00108_DS_
+0008                  00999 _00106_DS_:
+                      01000 ;       .line   17; "SSD.c"     dot_state = 0;
+0008   0??? 0???      01001         BANKSEL _dot_state
+000A   01??           01002         CLRF    _dot_state
+000B                  01003 _00108_DS_:
+                      01004 ;       .line   20; "SSD.c"     }
+000B   0008           01005         RETURN  
+                      01006 ; exit point of _toggle_dot_state
+                      01007 
+                      01008 
+                      01009 ;       code size estimation:
+                      01010 ;         411+  156 =   567 instructions ( 1446 byte)
+                      01011 
+                      01012         end
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+ACKDT                             CONSTANT      00000005              5
+ACKEN                             CONSTANT      00000004              4
+ACKSTAT                           CONSTANT      00000006              6
+ADCON0                            CONSTANT      0000001F             31
+ADCON1                            CONSTANT      0000009F            159
+ADCS0                             CONSTANT      00000006              6
+ADCS1                             CONSTANT      00000007              7
+ADCS2                             CONSTANT      00000006              6
+ADDEN                             CONSTANT      00000003              3
+ADFM                              CONSTANT      00000007              7
+ADIE                              CONSTANT      00000006              6
+ADIF                              CONSTANT      00000006              6
+ADON                              CONSTANT      00000000              0
+ADRESH                            CONSTANT      0000001E             30
+ADRESL                            CONSTANT      0000009E            158
+BCLIE                             CONSTANT      00000003              3
+BCLIF                             CONSTANT      00000003              3
+BF                                CONSTANT      00000000              0
+BRGH                              CONSTANT      00000002              2
+C                                 CONSTANT      00000000              0
+C1INV                             CONSTANT      00000004              4
+C1OUT                             CONSTANT      00000006              6
+C2INV                             CONSTANT      00000005              5
+C2OUT                             CONSTANT      00000007              7
+CCP1CON                           CONSTANT      00000017             23
+CCP1IE                            CONSTANT      00000002              2
+CCP1IF                            CONSTANT      00000002              2
+CCP1M0                            CONSTANT      00000000              0
+CCP1M1                            CONSTANT      00000001              1
+CCP1M2                            CONSTANT      00000002              2
+CCP1M3                            CONSTANT      00000003              3
+CCP1X                             CONSTANT      00000005              5
+CCP1Y                             CONSTANT      00000004              4
+CCP2CON                           CONSTANT      0000001D             29
+CCP2IE                            CONSTANT      00000000              0
+CCP2IF                            CONSTANT      00000000              0
+CCP2M0                            CONSTANT      00000000              0
+CCP2M1                            CONSTANT      00000001              1
+CCP2M2                            CONSTANT      00000002              2
+CCP2M3                            CONSTANT      00000003              3
+CCP2X                             CONSTANT      00000005              5
+CCP2Y                             CONSTANT      00000004              4
+CCPR1                             CONSTANT      00000015             21
+CCPR1H                            CONSTANT      00000016             22
+CCPR1L                            CONSTANT      00000015             21
+CCPR2                             CONSTANT      0000001B             27
+CCPR2H                            CONSTANT      0000001C             28
+CCPR2L                            CONSTANT      0000001B             27
+CHS0                              CONSTANT      00000003              3
+CHS1                              CONSTANT      00000004              4
+CHS2                              CONSTANT      00000005              5
+CIS                               CONSTANT      00000003              3
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+CKE                               CONSTANT      00000006              6
+CKP                               CONSTANT      00000004              4
+CM0                               CONSTANT      00000000              0
+CM1                               CONSTANT      00000001              1
+CM2                               CONSTANT      00000002              2
+CMCON                             CONSTANT      0000009C            156
+CMIE                              CONSTANT      00000006              6
+CMIF                              CONSTANT      00000006              6
+CREN                              CONSTANT      00000004              4
+CSRC                              CONSTANT      00000007              7
+CVR0                              CONSTANT      00000000              0
+CVR1                              CONSTANT      00000001              1
+CVR2                              CONSTANT      00000002              2
+CVR3                              CONSTANT      00000003              3
+CVRCON                            CONSTANT      0000009D            157
+CVREN                             CONSTANT      00000007              7
+CVROE                             CONSTANT      00000006              6
+CVRR                              CONSTANT      00000005              5
+D                                 CONSTANT      00000005              5
+DATA_ADDRESS                      CONSTANT      00000005              5
+DC                                CONSTANT      00000001              1
+D_A                               CONSTANT      00000005              5
+D_NOT_A                           CONSTANT      00000005              5
+EEADR                             CONSTANT      0000010D            269
+EEADRH                            CONSTANT      0000010F            271
+EECON1                            CONSTANT      0000018C            396
+EECON2                            CONSTANT      0000018D            397
+EEDATA                            CONSTANT      0000010C            268
+EEDATH                            CONSTANT      0000010E            270
+EEIE                              CONSTANT      00000004              4
+EEIF                              CONSTANT      00000004              4
+EEPGD                             CONSTANT      00000007              7
+F                                 CONSTANT      00000001              1
+FERR                              CONSTANT      00000002              2
+FSR                               CONSTANT      00000004              4
+GCEN                              CONSTANT      00000007              7
+GIE                               CONSTANT      00000007              7
+GO                                CONSTANT      00000002              2
+GO_DONE                           CONSTANT      00000002              2
+GO_NOT_DONE                       CONSTANT      00000002              2
+I2C_DATA                          CONSTANT      00000005              5
+I2C_READ                          CONSTANT      00000002              2
+I2C_START                         CONSTANT      00000003              3
+I2C_STOP                          CONSTANT      00000004              4
+IBF                               CONSTANT      00000007              7
+IBOV                              CONSTANT      00000005              5
+INDF                              CONSTANT      00000000              0
+INTCON                            CONSTANT      0000000B             11
+INTE                              CONSTANT      00000004              4
+INTEDG                            CONSTANT      00000006              6
+INTF                              CONSTANT      00000001              1
+IRP                               CONSTANT      00000007              7
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+NOT_A                             CONSTANT      00000005              5
+NOT_ADDRESS                       CONSTANT      00000005              5
+NOT_BO                            CONSTANT      00000000              0
+NOT_BOR                           CONSTANT      00000000              0
+NOT_DONE                          CONSTANT      00000002              2
+NOT_PD                            CONSTANT      00000003              3
+NOT_POR                           CONSTANT      00000001              1
+NOT_RBPU                          CONSTANT      00000007              7
+NOT_RC8                           CONSTANT      00000006              6
+NOT_T1SYNC                        CONSTANT      00000002              2
+NOT_TO                            CONSTANT      00000004              4
+NOT_TX8                           CONSTANT      00000006              6
+NOT_W                             CONSTANT      00000002              2
+NOT_WRITE                         CONSTANT      00000002              2
+OBF                               CONSTANT      00000006              6
+OERR                              CONSTANT      00000001              1
+OPTION_REG                        CONSTANT      00000081            129
+P                                 CONSTANT      00000004              4
+PCFG0                             CONSTANT      00000000              0
+PCFG1                             CONSTANT      00000001              1
+PCFG2                             CONSTANT      00000002              2
+PCFG3                             CONSTANT      00000003              3
+PCL                               CONSTANT      00000002              2
+PCLATH                            CONSTANT      0000000A             10
+PCON                              CONSTANT      0000008E            142
+PEIE                              CONSTANT      00000006              6
+PEN                               CONSTANT      00000002              2
+PIE1                              CONSTANT      0000008C            140
+PIE2                              CONSTANT      0000008D            141
+PIR1                              CONSTANT      0000000C             12
+PIR2                              CONSTANT      0000000D             13
+PORTA                             CONSTANT      00000005              5
+PORTB                             CONSTANT      00000006              6
+PORTC                             CONSTANT      00000007              7
+PORTD                             CONSTANT      00000008              8
+PORTE                             CONSTANT      00000009              9
+PR2                               CONSTANT      00000092            146
+PS0                               CONSTANT      00000000              0
+PS1                               CONSTANT      00000001              1
+PS2                               CONSTANT      00000002              2
+PSA                               CONSTANT      00000003              3
+PSAVE                             EXTERNAL      00000000              0
+PSPIE                             CONSTANT      00000007              7
+PSPIF                             CONSTANT      00000007              7
+PSPMODE                           CONSTANT      00000004              4
+R                                 CONSTANT      00000002              2
+RA0                               CONSTANT      00000000              0
+RA1                               CONSTANT      00000001              1
+RA2                               CONSTANT      00000002              2
+RA3                               CONSTANT      00000003              3
+RA4                               CONSTANT      00000004              4
+RA5                               CONSTANT      00000005              5
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+RB0                               CONSTANT      00000000              0
+RB1                               CONSTANT      00000001              1
+RB2                               CONSTANT      00000002              2
+RB3                               CONSTANT      00000003              3
+RB4                               CONSTANT      00000004              4
+RB5                               CONSTANT      00000005              5
+RB6                               CONSTANT      00000006              6
+RB7                               CONSTANT      00000007              7
+RBIE                              CONSTANT      00000003              3
+RBIF                              CONSTANT      00000000              0
+RC0                               CONSTANT      00000000              0
+RC1                               CONSTANT      00000001              1
+RC2                               CONSTANT      00000002              2
+RC3                               CONSTANT      00000003              3
+RC4                               CONSTANT      00000004              4
+RC5                               CONSTANT      00000005              5
+RC6                               CONSTANT      00000006              6
+RC7                               CONSTANT      00000007              7
+RC8_9                             CONSTANT      00000006              6
+RC9                               CONSTANT      00000006              6
+RCD8                              CONSTANT      00000000              0
+RCEN                              CONSTANT      00000003              3
+RCIE                              CONSTANT      00000005              5
+RCIF                              CONSTANT      00000005              5
+RCREG                             CONSTANT      0000001A             26
+RCSTA                             CONSTANT      00000018             24
+RD                                CONSTANT      00000000              0
+RD0                               CONSTANT      00000000              0
+RD1                               CONSTANT      00000001              1
+RD2                               CONSTANT      00000002              2
+RD3                               CONSTANT      00000003              3
+RD4                               CONSTANT      00000004              4
+RD5                               CONSTANT      00000005              5
+RD6                               CONSTANT      00000006              6
+RD7                               CONSTANT      00000007              7
+RE0                               CONSTANT      00000000              0
+RE1                               CONSTANT      00000001              1
+RE2                               CONSTANT      00000002              2
+READ_WRITE                        CONSTANT      00000002              2
+RP0                               CONSTANT      00000005              5
+RP1                               CONSTANT      00000006              6
+RSEN                              CONSTANT      00000001              1
+RX9                               CONSTANT      00000006              6
+RX9D                              CONSTANT      00000000              0
+R_NOT_W                           CONSTANT      00000002              2
+R_W                               CONSTANT      00000002              2
+S                                 CONSTANT      00000003              3
+SEN                               CONSTANT      00000000              0
+SMP                               CONSTANT      00000007              7
+SPBRG                             CONSTANT      00000099            153
+SPEN                              CONSTANT      00000007              7
+SREN                              CONSTANT      00000005              5
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+SSAVE                             EXTERNAL      00000000              0
+SSPADD                            CONSTANT      00000093            147
+SSPBUF                            CONSTANT      00000013             19
+SSPCON                            CONSTANT      00000014             20
+SSPCON2                           CONSTANT      00000091            145
+SSPEN                             CONSTANT      00000005              5
+SSPIE                             CONSTANT      00000003              3
+SSPIF                             CONSTANT      00000003              3
+SSPM0                             CONSTANT      00000000              0
+SSPM1                             CONSTANT      00000001              1
+SSPM2                             CONSTANT      00000002              2
+SSPM3                             CONSTANT      00000003              3
+SSPOV                             CONSTANT      00000006              6
+SSPSTAT                           CONSTANT      00000094            148
+STATUS                            CONSTANT      00000003              3
+STK00                             EXTERNAL      00000000              0
+STK01                             EXTERNAL      00000000              0
+STK02                             EXTERNAL      00000000              0
+STK03                             EXTERNAL      00000000              0
+STK04                             EXTERNAL      00000000              0
+STK05                             EXTERNAL      00000000              0
+STK06                             EXTERNAL      00000000              0
+STK07                             EXTERNAL      00000000              0
+STK08                             EXTERNAL      00000000              0
+STK09                             EXTERNAL      00000000              0
+STK10                             EXTERNAL      00000000              0
+STK11                             EXTERNAL      00000000              0
+STK12                             EXTERNAL      00000000              0
+SYNC                              CONSTANT      00000004              4
+T0CS                              CONSTANT      00000005              5
+T0IE                              CONSTANT      00000005              5
+T0IF                              CONSTANT      00000002              2
+T0SE                              CONSTANT      00000004              4
+T1CKPS0                           CONSTANT      00000004              4
+T1CKPS1                           CONSTANT      00000005              5
+T1CON                             CONSTANT      00000010             16
+T1INSYNC                          CONSTANT      00000002              2
+T1OSCEN                           CONSTANT      00000003              3
+T1SYNC                            CONSTANT      00000002              2
+T2CKPS0                           CONSTANT      00000000              0
+T2CKPS1                           CONSTANT      00000001              1
+T2CON                             CONSTANT      00000012             18
+TMR0                              CONSTANT      00000001              1
+TMR0IE                            CONSTANT      00000005              5
+TMR0IF                            CONSTANT      00000002              2
+TMR1                              CONSTANT      0000000E             14
+TMR1CS                            CONSTANT      00000001              1
+TMR1H                             CONSTANT      0000000F             15
+TMR1IE                            CONSTANT      00000000              0
+TMR1IF                            CONSTANT      00000000              0
+TMR1L                             CONSTANT      0000000E             14
+TMR1ON                            CONSTANT      00000000              0
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+TMR2                              CONSTANT      00000011             17
+TMR2IE                            CONSTANT      00000001              1
+TMR2IF                            CONSTANT      00000001              1
+TMR2ON                            CONSTANT      00000002              2
+TOUTPS0                           CONSTANT      00000003              3
+TOUTPS1                           CONSTANT      00000004              4
+TOUTPS2                           CONSTANT      00000005              5
+TOUTPS3                           CONSTANT      00000006              6
+TRISA                             CONSTANT      00000085            133
+TRISA0                            CONSTANT      00000000              0
+TRISA1                            CONSTANT      00000001              1
+TRISA2                            CONSTANT      00000002              2
+TRISA3                            CONSTANT      00000003              3
+TRISA4                            CONSTANT      00000004              4
+TRISA5                            CONSTANT      00000005              5
+TRISB                             CONSTANT      00000086            134
+TRISB0                            CONSTANT      00000000              0
+TRISB1                            CONSTANT      00000001              1
+TRISB2                            CONSTANT      00000002              2
+TRISB3                            CONSTANT      00000003              3
+TRISB4                            CONSTANT      00000004              4
+TRISB5                            CONSTANT      00000005              5
+TRISB6                            CONSTANT      00000006              6
+TRISB7                            CONSTANT      00000007              7
+TRISC                             CONSTANT      00000087            135
+TRISC0                            CONSTANT      00000000              0
+TRISC1                            CONSTANT      00000001              1
+TRISC2                            CONSTANT      00000002              2
+TRISC3                            CONSTANT      00000003              3
+TRISC4                            CONSTANT      00000004              4
+TRISC5                            CONSTANT      00000005              5
+TRISC6                            CONSTANT      00000006              6
+TRISC7                            CONSTANT      00000007              7
+TRISD                             CONSTANT      00000088            136
+TRISD0                            CONSTANT      00000000              0
+TRISD1                            CONSTANT      00000001              1
+TRISD2                            CONSTANT      00000002              2
+TRISD3                            CONSTANT      00000003              3
+TRISD4                            CONSTANT      00000004              4
+TRISD5                            CONSTANT      00000005              5
+TRISD6                            CONSTANT      00000006              6
+TRISD7                            CONSTANT      00000007              7
+TRISE                             CONSTANT      00000089            137
+TRISE0                            CONSTANT      00000000              0
+TRISE1                            CONSTANT      00000001              1
+TRISE2                            CONSTANT      00000002              2
+TRMT                              CONSTANT      00000001              1
+TX8_9                             CONSTANT      00000006              6
+TX9                               CONSTANT      00000006              6
+TX9D                              CONSTANT      00000000              0
+TXD8                              CONSTANT      00000000              0
+TXEN                              CONSTANT      00000005              5
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 27
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+TXIE                              CONSTANT      00000004              4
+TXIF                              CONSTANT      00000004              4
+TXREG                             CONSTANT      00000019             25
+TXSTA                             CONSTANT      00000098            152
+UA                                CONSTANT      00000001              1
+W                                 CONSTANT      00000000              0
+WCOL                              CONSTANT      00000007              7
+WR                                CONSTANT      00000001              1
+WREN                              CONSTANT      00000002              2
+WRERR                             CONSTANT      00000003              3
+WSAVE                             EXTERNAL      00000000              0
+Z                                 CONSTANT      00000002              2
+_00001_DS_                        ADDRESS       00000015             21
+_00002_DS_                        ADDRESS       00000016             22
+_00003_DS_                        ADDRESS       0000003E             62
+_00106_DS_                        ADDRESS       00000008              8
+_00108_DS_                        ADDRESS       0000000B             11
+_00113_DS_                        ADDRESS       00000043             67
+_00114_DS_                        ADDRESS       0000004E             78
+_00115_DS_                        ADDRESS       00000059             89
+_00116_DS_                        ADDRESS       00000064            100
+_00118_DS_                        ADDRESS       0000006E            110
+_00126_DS_                        ADDRESS       0000003F             63
+_00132_DS_                        ADDRESS       00000068            104
+_00134_DS_                        ADDRESS       0000006B            107
+_00140_DS_                        ADDRESS       0000002F             47
+_00142_DS_                        ADDRESS       0000007F            127
+_00145_DS_                        ADDRESS       000000C0            192
+_00146_DS_                        ADDRESS       00000100            256
+_00148_DS_                        ADDRESS       00000108            264
+_00150_DS_                        ADDRESS       0000010B            267
+_00159_DS_                        ADDRESS       0000001B             27
+_00160_DS_                        ADDRESS       00000028             40
+_00161_DS_                        ADDRESS       00000035             53
+_00162_DS_                        ADDRESS       00000042             66
+_00165_DS_                        ADDRESS       0000004E             78
+_00172_DS_                        ADDRESS       00000017             23
+_00181_DS_                        ADDRESS       0000001A             26
+_00182_DS_                        ADDRESS       00000026             38
+_00183_DS_                        ADDRESS       00000032             50
+_00184_DS_                        ADDRESS       0000003E             62
+_00186_DS_                        ADDRESS       00000049             73
+_00194_DS_                        ADDRESS       00000016             22
+_BODEN_OFF                        CONSTANT      00003FBF          16319
+_BODEN_ON                         CONSTANT      00003FFF          16383
+_BOREN_OFF                        CONSTANT      00003FBF          16319
+_BOREN_ON                         CONSTANT      00003FFF          16383
+_CONFIG                           CONSTANT      00002007           8199
+_CPD_OFF                          CONSTANT      00003FFF          16383
+_CPD_ON                           CONSTANT      00003EFF          16127
+_CP_ALL                           CONSTANT      00001FFF           8191
+_CP_OFF                           CONSTANT      00003FFF          16383
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 28
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+_CP_ON                            CONSTANT      00001FFF           8191
+_DEBUG_OFF                        CONSTANT      00003FFF          16383
+_DEBUG_ON                         CONSTANT      000037FF          14335
+_DEVID1                           CONSTANT      00002006           8198
+_FOSC_EXTRC                       CONSTANT      00003FFF          16383
+_FOSC_HS                          CONSTANT      00003FFE          16382
+_FOSC_LP                          CONSTANT      00003FFC          16380
+_FOSC_XT                          CONSTANT      00003FFD          16381
+_GPIO_GetPortPinState             EXTERNAL      00000000              0
+_GPIO_InitPort                    EXTERNAL      00000000              0
+_GPIO_InitPortPin                 EXTERNAL      00000000              0
+_GPIO_SetPortPinState             EXTERNAL      00000000              0
+_GPIO_SetPortState                EXTERNAL      00000000              0
+_HS_OSC                           CONSTANT      00003FFE          16382
+_IDLOC0                           CONSTANT      00002000           8192
+_IDLOC1                           CONSTANT      00002001           8193
+_IDLOC2                           CONSTANT      00002002           8194
+_IDLOC3                           CONSTANT      00002003           8195
+_LP_OSC                           CONSTANT      00003FFC          16380
+_LVP_OFF                          CONSTANT      00003F7F          16255
+_LVP_ON                           CONSTANT      00003FFF          16383
+_PWRTE_OFF                        CONSTANT      00003FFF          16383
+_PWRTE_ON                         CONSTANT      00003FF7          16375
+_RC_OSC                           CONSTANT      00003FFF          16383
+_SSD_GetState                     GLOBAL        00000000              0
+_SSD_GetSymbol                    GLOBAL        00000000              0
+_SSD_Init                         GLOBAL        00000000              0
+_SSD_SetState                     GLOBAL        00000000              0
+_SSD_SetSymbol                    GLOBAL        00000000              0
+_SSD_Update                       GLOBAL        00000000              0
+_SSD_Update_2                     GLOBAL        00000000              0
+_SSD_Update_2_current_ssd_65536_26  STATIC        00000000              0
+_SSD_Update_current_ssd_65536_22  STATIC        00000000              0
+_S_SSD__SSD_GetState_0020         ADDRESS       00000020             32
+_S_SSD__SSD_GetState_002C         ADDRESS       0000002C             44
+_S_SSD__SSD_GetState_0038         ADDRESS       00000038             56
+_S_SSD__SSD_GetState_0044         ADDRESS       00000044             68
+_S_SSD__SSD_Init_000D             ADDRESS       0000000D             13
+_S_SSD__SSD_Init_0029             ADDRESS       00000029             41
+_S_SSD__SSD_Init_004B             ADDRESS       0000004B             75
+_S_SSD__SSD_Init_0056             ADDRESS       00000056             86
+_S_SSD__SSD_Init_0061             ADDRESS       00000061             97
+_S_SSD__SSD_Init_006C             ADDRESS       0000006C            108
+_S_SSD__SSD_Init_0076             ADDRESS       00000076            118
+_S_SSD__SSD_Init_0080             ADDRESS       00000080            128
+_S_SSD__SSD_SetState_0025         ADDRESS       00000025             37
+_S_SSD__SSD_SetState_0032         ADDRESS       00000032             50
+_S_SSD__SSD_SetState_003F         ADDRESS       0000003F             63
+_S_SSD__SSD_SetState_004C         ADDRESS       0000004C             76
+_S_SSD__SSD_Update_0006           ADDRESS       00000006              6
+_S_SSD__SSD_Update_000E           ADDRESS       0000000E             14
+_S_SSD__SSD_Update_0016           ADDRESS       00000016             22
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 29
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+_S_SSD__SSD_Update_001E           ADDRESS       0000001E             30
+_S_SSD__SSD_Update_0054           ADDRESS       00000054             84
+_S_SSD__SSD_Update_005E           ADDRESS       0000005E             94
+_S_SSD__SSD_Update_2_0009         ADDRESS       00000009              9
+_S_SSD__SSD_Update_2_0011         ADDRESS       00000011             17
+_S_SSD__SSD_Update_2_0019         ADDRESS       00000019             25
+_S_SSD__SSD_Update_2_0021         ADDRESS       00000021             33
+_S_SSD__SSD_Update_2_002D         ADDRESS       0000002D             45
+_S_SSD__SSD_Update_2_0072         ADDRESS       00000072            114
+_S_SSD__SSD_Update_2_007C         ADDRESS       0000007C            124
+_S_SSD__SSD_Update_2_00B3         ADDRESS       000000B3            179
+_S_SSD__SSD_Update_2_00BD         ADDRESS       000000BD            189
+_S_SSD__SSD_Update_2_00F4         ADDRESS       000000F4            244
+_S_SSD__SSD_Update_2_00FE         ADDRESS       000000FE            254
+_WDTE_OFF                         CONSTANT      00003FFB          16379
+_WDTE_ON                          CONSTANT      00003FFF          16383
+_WDT_OFF                          CONSTANT      00003FFB          16379
+_WDT_ON                           CONSTANT      00003FFF          16383
+_WRT_1FOURTH                      CONSTANT      00003BFF          15359
+_WRT_256                          CONSTANT      00003DFF          15871
+_WRT_HALF                         CONSTANT      000039FF          14847
+_WRT_OFF                          CONSTANT      00003FFF          16383
+_XT_OSC                           CONSTANT      00003FFD          16381
+__14_BIT                          CONSTANT      00000001              1
+__16F877A                         CONSTANT      00000001              1
+__ACTIVE_BANK_ADDR                VARIABLE      FFFFFFFF             -1
+__ACTIVE_PAGE_ADDR                VARIABLE      FFFFFFFF             -1
+__ASSUMED_BANK_ADDR               VARIABLE      FFFFFFFF             -1
+__BANK_0                          CONSTANT      00000000              0
+__BANK_1                          CONSTANT      00000080            128
+__BANK_2                          CONSTANT      00000100            256
+__BANK_3                          CONSTANT      00000180            384
+__BANK_BITS                       CONSTANT      00000180            384
+__BANK_FIRST                      CONSTANT      00000000              0
+__BANK_INV                        CONSTANT      FFFFFFFF             -1
+__BANK_LAST                       CONSTANT      00000180            384
+__BANK_MASK                       CONSTANT      0000007F            127
+__BANK_SHIFT                      CONSTANT      00000007              7
+__BANK_SIZE                       CONSTANT      00000080            128
+__CODE_END                        CONSTANT      00001FFF           8191
+__CODE_START                      CONSTANT      00000000              0
+__COMMON_RAM_END                  CONSTANT      0000007F            127
+__COMMON_RAM_START                CONSTANT      00000070            112
+__CONFIG_END                      CONSTANT      00002007           8199
+__CONFIG_START                    CONSTANT      00002007           8199
+__EEPROM_END                      CONSTANT      000021FF           8703
+__EEPROM_START                    CONSTANT      00002100           8448
+__GPUTILS_SVN_VERSION             CONSTANT      00000505           1285
+__GPUTILS_VERSION_MAJOR           CONSTANT      00000001              1
+__GPUTILS_VERSION_MICRO           CONSTANT      00000000              0
+__GPUTILS_VERSION_MINOR           CONSTANT      00000005              5
+__IDLOCS_END                      CONSTANT      00002003           8195
+gpasm-1.5.0 #1285 (Sep 12 2016) obj\Release\S   8-6-2020  15:31:06          PAGE 30
+
+
+SYMBOL TABLE
+  LABEL                              TYPE        VALUE         VALUE          VALUE
+                                                 (hex)         (dec)          (text)
+
+__IDLOCS_START                    CONSTANT      00002000           8192
+__NUM_BANKS                       CONSTANT      00000004              4
+__NUM_PAGES                       CONSTANT      00000004              4
+__PAGE_0                          CONSTANT      00000000              0
+__PAGE_1                          CONSTANT      00000800           2048
+__PAGE_2                          CONSTANT      00001000           4096
+__PAGE_3                          CONSTANT      00001800           6144
+__PAGE_BITS                       CONSTANT      00001800           6144
+__PAGE_FIRST                      CONSTANT      00000000              0
+__PAGE_INV                        CONSTANT      FFFFFFFF             -1
+__PAGE_LAST                       CONSTANT      00001800           6144
+__PAGE_MASK                       CONSTANT      000007FF           2047
+__PAGE_SHIFT                      CONSTANT      0000000B             11
+__PAGE_SIZE                       CONSTANT      00000800           2048
+__VECTOR_INT                      CONSTANT      00000004              4
+__VECTOR_RESET                    CONSTANT      00000000              0
+__WHILE_LOOP_COUNT_MAX            CONSTANT      000000FF            255
+_dot_state                        STATIC        00000000              0
+_ssd_data                         STATIC        00000000              0
+_ssd_symbols                      GLOBAL        00000000              0
+_toggle_dot_state                 ADDRESS       00000000              0
+_toggle_dot_time                  STATIC        00000000              0
+r0x101A                           STATIC        0000000C             12
+r0x101B                           STATIC        0000000D             13
+r0x101C                           STATIC        0000000E             14
+r0x101D                           STATIC        00000008              8
+r0x101E                           STATIC        00000009              9
+r0x101F                           STATIC        0000000A             10
+r0x1013                           STATIC        00000013             19
+r0x1014                           STATIC        00000014             20
+r0x1015                           STATIC        00000011             17
+r0x1016                           STATIC        00000012             18
+r0x1018                           STATIC        0000000F             15
+r0x1019                           STATIC        00000010             16
+r0x1020                           STATIC        0000000B             11
+r0x1021                           STATIC        00000005              5
+r0x1022                           STATIC        00000006              6
+r0x1023                           STATIC        00000007              7
+r0x1024                           STATIC        00000000              0
+r0x1025                           STATIC        00000001              1
+r0x1026                           STATIC        00000002              2
+r0x1027                           STATIC        00000003              3
+r0x1028                           STATIC        00000004              4
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
